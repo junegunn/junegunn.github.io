@@ -5,6 +5,14 @@ title: "Shell Integration"
 
 # Shell Integration
 
+To be useful out of the box without any scripting effort, fzf provides shell
+integration for `bash`, `zsh` and `fish`.
+
+* CTRL-T, ALT-C, CTRL-R for bash, zsh, and fish
+* Fuzzy completion for bash and zsh
+
+{{< figure src="../images/fzf.gif" width=1200 height=800 >}}
+
 ## Setting up shell integration
 
 To set up shell integration, add the following to your shell configuration file:
