@@ -1,6 +1,6 @@
 baseURL = 'https://junegunn.github.io/'
 languageCode = 'en-us'
-title = 'github.com/junegunn'
+title = 'junegunn.choi.'
 
 theme = 'hugo-book'
 enableEmoji = true
