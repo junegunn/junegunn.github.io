@@ -13,6 +13,7 @@ disableKinds = ["taxonomy"]
   # BookTheme = 'auto'
   # BookLogo = 'logo.png'
   BookSearch = true
+  BookFavicon = 'favicon.ico'
 
 [markup]
   [markup.goldmark]
