@@ -6,7 +6,7 @@ title: "vim-plug"
 url: /vim-plug
 ---
 
-{{< figure src="images/plug.png" >}}
+{{< figure src="images/plug.png" width="1200" height="300" >}}
 
 vim-plug is the de-facto standard plugin manager for Vim. With 10+ years of
 history, it's no longer new and shiny, but it's extremely reliable and gets
