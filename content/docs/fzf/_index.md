@@ -2,6 +2,7 @@
 weight: 1
 bookFlatSection: true
 title: "fzf"
+url: /fzf
 ---
 
 {{< figure src="images/fzf.png" >}}

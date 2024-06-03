@@ -40,5 +40,3 @@ disableKinds = ["taxonomy"]
 [permalinks]
   [permalinks.page]
     docs = '/:sections[1:]/:slug/'
-  [permalinks.section]
-    docs = '/:sections[1:]/'

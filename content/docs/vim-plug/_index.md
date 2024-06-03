@@ -2,6 +2,7 @@
 weight: 2
 bookFlatSection: true
 title: "vim-plug"
+url: /vim-plug
 ---
 
 {{< figure src="images/plug.png" >}}
