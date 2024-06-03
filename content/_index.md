@@ -4,7 +4,7 @@ type: docs
 bookToC: false
 ---
 
-## Hi!
+# Hi!
 
 I develop and maintain open-source projects that boost developer productivity.
 
