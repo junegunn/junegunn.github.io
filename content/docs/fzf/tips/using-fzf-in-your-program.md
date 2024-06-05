@@ -49,6 +49,39 @@ end
 pp result
 ```
 
+### Python
+
+Translated to Python.
+
+```python
+import subprocess
+import sys
+import time
+
+def with_filter(command, work):
+    process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, shell=True)
+    original_stdout = sys.stdout
+    sys.stdout = process.stdin
+    try:
+        work()
+        process.stdin.close()
+    except:
+        pass
+    finally:
+        sys.stdout = original_stdout
+
+    output = process.stdout.read().splitlines()
+    process.stdout.close()
+    return output
+
+def work():
+    for n in range(1000):
+        print(n, flush=True)
+        time.sleep(0.005)
+
+print(with_filter('fzf -m', work))
+```
+
 ### Clojure
 
 We do the same with Clojure. The code here is a bit more involved, but it will
@@ -74,3 +107,4 @@ give you a hint on how it can be done in other JVM languages.
                  (Thread/sleep 5)))]
   (println result))
 ```
+

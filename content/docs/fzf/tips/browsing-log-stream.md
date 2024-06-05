@@ -11,9 +11,9 @@ whenever the query changes.
 So if you attach fzf to an endless input stream, such as server logs, the
 memory usage will grow indefinitely and fzf will eventually crash.
 
-To work around this limitation, fzf provides `--tail=NUM` option that
-allows you to limit the number of items to keep in memory. When the number of
-items exceeds the limit, fzf will drop the oldest items from the list.
+To work around this limitation, ==fzf provides `--tail=NUM` option that allows
+you to limit the number of items to keep in memory==. When the number of items
+exceeds the limit, fzf will drop the oldest items from the list.
 
 ```sh
 # Make sure fzf doesn't blow up
