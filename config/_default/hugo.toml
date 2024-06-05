@@ -5,6 +5,7 @@ title = 'junegunn.choi.'
 theme = ['hugo-notice', 'hugo-book']
 enableEmoji = true
 enableRobotsTXT = true
+enableGitInfo = true
 
 # No tags and categories
 disableKinds = ["taxonomy"]
@@ -14,6 +15,9 @@ disableKinds = ["taxonomy"]
   # BookLogo = 'logo.png'
   BookSearch = true
   BookFavicon = 'favicon.ico'
+
+  [params.author]
+    name = 'Junegunn Choi'
 
 [markup]
   [markup.goldmark]
