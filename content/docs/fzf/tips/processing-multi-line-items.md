@@ -60,23 +60,23 @@ items. Here are some examples.
 ### All bash/zsh functions, highlighted
 
 ```bash
-# All bash functions, highlighted
+# All bash/zsh functions, highlighted
 declare -f |
   perl -0 -pe 's/^}\n/}\n\0/gm' |
   bat --plain --language bash --color always |
   fzf --read0 --ansi --layout reverse --multi --highlight-line
 ```
 
-* Input (declare)
+1. Input (declare)
     * List all bash/zsh functions with their definitions
-* Pre-process (perl)
+1. Pre-process (perl)
     * `-0` option sets the input record separator to NUL byte
         * Since `declare -f` doesn't print any NUL bytes, the whole output is
           treated as a single record
     * We inject a NUL byte after `}\n` making the chunks NUL-separated
-* Pre-process (bat)
+1. Pre-process (bat)
     * We use [bat] to syntax-highlight the functions
-* Filter (fzf)
+1. Filter (fzf)
     * `--read0` to read NUL-separated list
     * `--ansi` to parse ANSI color codes
     * `--layout reverse` for top-to-bottom layout
@@ -102,20 +102,20 @@ rg --pretty bash |
   perl -ne '/^([0-9]+:|$)/ or print'
 ```
 
-* Input (rg)
+1. Input (rg)
     * `--pretty` option for colored, multi-line output
-* Pre-process (perl)
+1. Pre-process (perl)
     * `-0` option to treated the input as a single record
     * With `s/\n\n/\n\0/gm`, we replace two new line characters with a single new
       line character followed by a NUL byte. We keep a single new line character
       for better visual separation between items.
-* Filter (fzf)
+1. Filter (fzf)
     * `--read0` required for NUL-separated input
     * `--ansi` to parse ANSI color codes
     * `--multi` to allow selecting multiple items
     * `--highlight-line` to highlight the entire line instead of just the text part
     * `--layout reverse` for top-to-bottom layout
-* Post-process (perl)
+1. Post-process (perl)
     * We only keep the lines showing the path by filtering out the other
       parts.
 
@@ -137,13 +137,13 @@ rg --column --line-number --no-heading --color=always --smart-case -- bash |
   perl -ne '/^([^:]+:){3}/ and print'
 ```
 
-* Input (rg)
+1. Input (rg)
     * First we use `rg` to search for the keyword `bash` in the current directory
-* Pre-process (perl)
+1. Pre-process (perl)
     * Then use Perl to replace new line characters with a NUL byte, then
       inject a new line character after `PATH:LINE:COL:` part. The matching
       line is indented by two spaces.
-* Filter (fzf)
+1. Filter (fzf)
     * In addition to the usual `--read0` and `--highlight-line`, we also set
       up preview window to show the matching line in the file in the preview
       window on the right. Since we specified `--delimiter :`, we can refer to
@@ -152,7 +152,7 @@ rg --column --line-number --no-heading --color=always --smart-case -- bash |
       window. `+{2}` means that the offset should be set according to the second
       token in the item, which is the line number. `/4` means that the offset
       is adjusted so that the line is shown at the 1/4th of the preview window.
-* Post-process (perl)
-    * We only keep the `PATH:LINE:COL:` part of the output
+1. Post-process (perl)
+    * We only keep the `PATH:LINE:COL:` lines from the output
 
 {{< figure src="/fzf/images/fzf-rg-two-lines.png" >}}
