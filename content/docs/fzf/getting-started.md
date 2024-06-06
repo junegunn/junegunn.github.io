@@ -111,7 +111,7 @@ git branch | fzf --preview 'git show --color=always {-1}' \
                  --bind 'enter:become(git checkout {-1})'
 ```
 
-* This uses fzf's event-action binding mechnism (`--bind`). In this case, we
+* This uses fzf's event-action binding mechanism (`--bind`). In this case, we
   bind `enter` key event to `become` action.
 * So when you press <kbd>"enter"</kbd> key, fzf "become"s `git checkout
   THE_BRANCH` command.
