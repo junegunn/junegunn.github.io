@@ -7,7 +7,7 @@ title: Processing multi-line items
 fzf is most commonly used to process single-line items like most other Unix
 tools. But you can also use it to process multi-line items as well and fzf is
 capable of properly displaying them in multi-line. To do that, you need to
-feed NUL-separated list to fzf using `--read0` option because a new line
+feed NUL-separated list to fzf and use `--read0` option because a new line
 character can no longer be used to separate items.
 
 ```sh
@@ -19,9 +19,16 @@ find * -print0 | fzf --read0
 
 ### `--highlight-line`
 
-You'll probably want `--highlight-line` option to highlight the entire line
-instead of just the text part.
+When working with multi-line items, you'll probably want `--highlight-line`
+option to highlight the entire line instead of just the text part of each line.
 
+#### Without it
+
+{{< figure src="/fzf/images/fzf-highlight-line-off.png" >}}
+
+#### With it
+
+{{< figure src="/fzf/images/fzf-highlight-line-on.png" >}}
 
 ### `--marker-multi-line`
 
