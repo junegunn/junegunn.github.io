@@ -43,9 +43,9 @@ tail -f *.log | fzf --tail 100000 --tac --no-sort --exact
 ```bash
 stern . --color always 2>&1 |
     fzf --ansi --tail 100000 --tac --no-sort --exact \
-        --bind 'ctrl-o:execute:${EDITOR:-vim} -n <(kubectl logs {1})' \
+        --bind 'ctrl-o:execute:vim -n <(kubectl logs {1})' \
         --bind 'enter:execute:kubectl exec -it {1} -- bash' \
-        --header '╱ Enter (kubectl exec) ╱ CTRL-O (open log in editor) ╱'
+        --header '╱ Enter (kubectl exec) ╱ CTRL-O (open log in vim) ╱'
 ```
 
 #### `--color always` and `--ansi`
@@ -61,7 +61,7 @@ the ANSI color codes by specifying `--ansi` option.
 
 The above example uses `--bind` option to define two custom bindings.
 
-* You can press `ctrl-o` to open the log in the editor,
+* You can press `ctrl-o` to open the log in vim,
 * and `enter` to execute `kubectl exec` on the selected pod.
 
 `execute` action allows you to "execute" an arbitrary command without leaving
