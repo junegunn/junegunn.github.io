@@ -5,24 +5,70 @@ title: "FAQ"
 
 # Frequently Asked Questions
 
-## How can I load a color scheme?
+## Where should I put plugin configuration?
 
-> _I'm getting `E185: Cannot find color scheme 'xxx'`_
+The most common way to configure a Vim plugin is to define global variables
+and/or mappings. Since you can define variables and mappings even when the
+plugin is not available, it's safe to put them anywhere you prefer.
 
-Plugins become available after `call plug#end()`. So, if you want to load a
-color scheme installed by vim-plug, you should put the `colorscheme` command
-after `call plug#end()`, for example:
+I put a plugin's configuration right after its `Plug` command so that it's
+easier to manage. I also indent the lines to make them visually distinct. This
+is just a matter of personal preference.
 
 ```vim
 call plug#begin()
+
+Plug 'majutsushi/tagbar'
+  let g:tagbar_sort = 0
+
+Plug 'tpope/vim-commentary'
+  map  gc  <Plug>Commentary
+  nmap gcc <Plug>CommentaryLine
+
 Plug 'morhetz/gruvbox'
+  let g:gruvbox_contrast_dark = 'soft'
+
+call plug#end()
+```
+
+However, some plugins require you to call their functions for configuring
+them, and the functions are not available until you call `plug#end()`, so you
+are forced to put it after `plug#end()`. Similarly, you can't load a color
+scheme before `plug#end()`.
+
+```vim
+call plug#begin()
+
+Plug 'junegunn/vim-after-object'
+
+Plug 'morhetz/gruvbox'
+  let g:gruvbox_contrast_dark = 'soft'
+
 call plug#end()
 
+" Prepended `silent!` in case the plugin is not yet installed
+silent! call after_object#enable('=', ':', '#', ' ', '|')
+
+" Color schemes are also not available until plug#end()
 silent! colorscheme gruvbox
 ```
 
-We prepend `silent!` to ignore errors when the color scheme is not yet
-installed.
+But as the list of plugins grows, it gets harder to keep track of a plugin's
+configuration if it's not co-located. To alleviate this problem, you can use
+`VimEnter` autocmd to delay code execution until Vim is ready.
+
+```vim
+call plug#begin()
+
+Plug 'junegunn/vim-after-object'
+  autocmd VimEnter * silent! call after_object#enable('=', ':', '#', ' ', '|')
+
+Plug 'morhetz/gruvbox'
+  let g:gruvbox_contrast_dark = 'soft'
+  autocmd VimEnter * silent! colorscheme gruvbox
+
+call plug#end()
+```
 
 ## Should I set up on-demand (lazy) loading?
 
