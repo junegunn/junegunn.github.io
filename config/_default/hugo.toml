@@ -11,8 +11,8 @@ enableGitInfo = true
 disableKinds = ["taxonomy"]
 
 [params]
-  # BookTheme = 'auto'
-  # BookLogo = 'logo.png'
+  BookTheme = 'auto'
+  BookLogo = 'android-chrome-192x192.png'
   BookSearch = true
   BookFavicon = 'favicon.ico'
 
@@ -27,20 +27,10 @@ disableKinds = ["taxonomy"]
     # [markup.goldmark.renderer]
     #   unsafe = true
 
+  # hugo gen chromastyles --style=emacs > syntax-light.css
+  # hugo gen chromastyles --style=nord > syntax-dark.css
   [markup.highlight]
-    anchorLineNos = false
-    codeFences = true
-    guessSyntax = false
-    hl_Lines = ''
-    hl_inline = false
-    lineAnchors = ''
-    lineNoStart = 1
-    lineNos = false
-    lineNumbersInTable = true
-    noClasses = true
-    noHl = false
-    style = 'emacs'
-    tabWidth = 4
+    noClasses = false
 
 [permalinks]
   [permalinks.page]
