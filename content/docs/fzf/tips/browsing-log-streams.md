@@ -1,8 +1,8 @@
 ---
-title: Browsing log stream with fzf
+title: Browsing log streams
 ---
 
-# Browsing log stream with fzf
+# Browsing log streams with fzf
 
 In order to allow changing queries and getting the updated results in
 real-time, fzf keeps the whole input list in memory and scans the list
