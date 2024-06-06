@@ -24,8 +24,8 @@ disableKinds = ["taxonomy"]
     [markup.goldmark.extensions.extras.mark]
       enable = true
 
-    # [markup.goldmark.renderer]
-    #   unsafe = true
+    [markup.goldmark.renderer]
+      unsafe = true
 
   # hugo gen chromastyles --style=emacs > syntax-light.css
   # hugo gen chromastyles --style=nord > syntax-dark.css

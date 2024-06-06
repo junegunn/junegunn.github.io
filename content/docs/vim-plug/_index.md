@@ -6,7 +6,10 @@ title: "vim-plug"
 url: /vim-plug
 ---
 
-{{< figure src="images/plug.png" width="1200" height="300" >}}
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/plug-dark.png" height="300">
+  <img src="images/plug.png" height="300" alt="vim-plug">
+</picture>
 
 vim-plug is the de-facto standard plugin manager for Vim. With 10+ years of
 history, it's no longer new and shiny, but it's extremely reliable and gets
