@@ -97,8 +97,8 @@ declare -f |
 
 [ripgrep]: https://github.com/BurntSushi/ripgrep
 
-When you use [ripgrep] to search for a string, by default it prints matching
-files in multi-link chunks delimited by two new line characters. For fzf to
+When you use [ripgrep] to search for a pattern, by default it prints matching
+files in multi-line chunks delimited by two new line characters. For fzf to
 recognize each chunk as a single item, we inject NUL bytes.
 
 ```sh
