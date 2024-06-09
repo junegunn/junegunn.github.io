@@ -7,35 +7,29 @@ title: Ripgrep integration
 ## The two pillars of fzf
 
 The interactive terminal interface and the fuzzy matching algorithm are the
-two pillars of fzf. However, the usefulness of the latter is quite limited in
-a non-interactive environment because by nature,
+two pillars of fzf. However, the usefulness of the latter is rather limited in
+a non-interactive environment. This is because by its very nature, it
+generates irrelevant matches and user confirmation is almost always required.
 
-1. it requires user confirmation
-
-    ```sh
-    fzf --filter lt < /usr/share/dict/words | head -5
-      # lat
-      # let
-      # lit
-      # lot
-      # Lot
-
-      # These are all good matches for 'lt', but which one is the right one?
-    ```
-
-2. and it generates many irrelevant matches.
-
-    ```sh
-    fzf --filter lt < /usr/share/dict/words | tail -5
-      # philosophicojuristic
-      # blepharoconjunctivitis
-      # sulphureovirescent
-      # blepharosyndesmitis
-      # choledochoduodenostomy
-
-      # In interactive mode, you don't get to see these unless you scroll a lot.
-      # You're definitely not interested in these. But are you?
-    ```
+>  ```sh
+>  fzf --filter lt < /usr/share/dict/words | head -5
+>    # lat
+>    # let
+>    # lit
+>    # lot
+>    # Lot
+>  ```
+>  "These are all good matches for 'lt', but which one is truly the right one?"
+>
+>  ```sh
+>  fzf --filter lt < /usr/share/dict/words | tail -5
+>    # philosophicojuristic
+>    # blepharoconjunctivitis
+>    # sulphureovirescent
+>    # blepharosyndesmitis
+>    # choledochoduodenostomy
+>  ```
+>  "You're definitely not interested in these. But are you?"
 
 The interactive terminal interface, on the other hand, can still be useful
 even if you don't want the fuzzy matching algorithm of fzf and want to use
