@@ -259,7 +259,7 @@ so you can select multiple lines with `TAB` and `SHIFT-TAB`.
      --bind "start:$RELOAD" --bind "change:$RELOAD" \
      --bind "enter:become:$OPENER" \
      --bind "ctrl-o:execute:$OPENER" \
-     --bind 'alt-a:select-all,alt-d:deselect-all' \
+     --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-/:toggle-preview' \
      --delimiter : \
      --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
      --preview-window '~4,+{2}+4/3,<80(up)')
@@ -279,8 +279,8 @@ so you can select multiple lines with `TAB` and `SHIFT-TAB`.
       file containing the selected items. It's a combination of two flags, `+`
       and `f`. See [the reference page](/fzf/reference/#preview) for more
       information.
-* We added two more bindings; `alt-a` and `alt-d`, to select and deselect all
-  items for convenience.
+* We added three more bindings for convenience; `alt-a` and `alt-d`, to select
+  and deselect all items, and `ctrl-/` to toggle the preview window.
 
 ### Wrap-up
 
@@ -300,7 +300,7 @@ rfv() (
       --bind "start:$RELOAD" --bind "change:$RELOAD" \
       --bind "enter:become:$OPENER" \
       --bind "ctrl-o:execute:$OPENER" \
-      --bind 'alt-a:select-all,alt-d:deselect-all' \
+      --bind 'alt-a:select-all,alt-d:deselect-all,ctrl-/:toggle-preview' \
       --delimiter : \
       --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
       --preview-window '~4,+{2}+4/3,<80(up)' \
