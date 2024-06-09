@@ -125,7 +125,7 @@ rg --column --color=always --smart-case '' |
 
 Okay, but we're repeating the same command twice. Let's put it in a variable
 and refer to it. Instead of feeding the output of the command to fzf via
-standard input, let's bind `start` event to `reload` action.
+standard input, let's bind `start` event to `reload` action for consistency.
 
 ```sh {hl_lines=[1, 2, 4]}
 (RELOAD='reload:rg --column --color=always --smart-case {q} || :'
