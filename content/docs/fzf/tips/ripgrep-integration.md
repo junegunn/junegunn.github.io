@@ -252,7 +252,7 @@ so you can select multiple lines with `TAB` and `SHIFT-TAB`.
  OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
            vim {1} +{2}     # No selection. Open the current line in Vim.
          else
-           vim +cw -q {+f}  # Build and open quickfix window for the selected items.
+           vim +cw -q {+f}  # Build quickfix list for the selected items.
          fi'
  fzf < /dev/null \
      --disabled --ansi --multi \
@@ -270,8 +270,8 @@ so you can select multiple lines with `TAB` and `SHIFT-TAB`.
   the number of selected items.
 * `$OPENER` holds a shell code that is run on `enter` and `ctrl-o`. It behaves
   differently depending on `$FZF_SELECT_COUNT`.
-* It builds and open quickfix window only when the user has selected any items
-  using `TAB` or `SHIFT-TAB`.
+* It builds the quickfix list for the selected items and open it only when the
+  user has selected any items using `TAB` or `SHIFT-TAB`.
 * `vim +cw -q {+f}` needs some explanation.
     * `+cw` tells Vim to execute `:cw` command to open the quickfix window.
     * `-q {+f}` makes Vim start in quickfix mode using the error file `{+f}`
@@ -293,7 +293,7 @@ rfv() (
   OPENER='if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
             vim {1} +{2}     # No selection. Open the current line in Vim.
           else
-            vim +cw -q {+f}  # Build and open quickfix window for the selected items.
+            vim +cw -q {+f}  # Build quickfix list for the selected items.
           fi'
   fzf < /dev/null \
       --disabled --ansi --multi \
