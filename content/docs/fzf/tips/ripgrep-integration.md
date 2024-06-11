@@ -1,15 +1,17 @@
 ---
 title: Ripgrep integration
+params:
+  long: Ripgrep integration, a walkthrough
 ---
 
-# Ripgrep integration
+# Ripgrep integration, a walkthrough
 
 ## The two pillars of fzf
 
 The interactive terminal interface and the fuzzy matching algorithm are the
 two pillars of fzf. However, the usefulness of the latter is rather limited in
 a non-interactive environment. This is because by its very nature, it
-generates irrelevant matches and user confirmation is almost always required.
+generates irrelevant matches and user confirmation is almost always necessary.
 
 >  ```sh
 >  fzf --filter lt < /usr/share/dict/words | head -5
