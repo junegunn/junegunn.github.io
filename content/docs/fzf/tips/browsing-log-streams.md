@@ -17,12 +17,13 @@ exceeds the limit, fzf will drop the oldest items from the list.
 
 ```sh
 # Make sure fzf doesn't blow up
-cat /dev/random | xxd | fzf --tail 1000 --tac
+cat /dev/random | xxd | fzf --tail 1000 --tac --wrap
 ```
 
 ## Best practices
 
 * Use `--tac` to see the newest items up front
+* Use `--wrap` to prevent truncation of long lines
 * You might want to use `--no-sort` option to keep the order of the items
   intact
     * Without sorting, you'll likely see many irrelevant matches, so try
@@ -33,7 +34,7 @@ cat /dev/random | xxd | fzf --tail 1000 --tac
 ### Browsing local logs files
 
 ```bash
-tail -f *.log | fzf --tail 100000 --tac --no-sort --exact
+tail -f *.log | fzf --tail 100000 --tac --no-sort --exact --wrap
 ```
 
 ### Browsing Kubernetes logs using [stern]
@@ -42,7 +43,7 @@ tail -f *.log | fzf --tail 100000 --tac --no-sort --exact
 
 ```bash
 stern . --color always 2>&1 |
-    fzf --ansi --tail 100000 --tac --no-sort --exact \
+    fzf --ansi --tail 100000 --tac --no-sort --exact --wrap \
         --bind 'ctrl-o:execute:vim -n <(kubectl logs {1})' \
         --bind 'enter:execute:kubectl exec -it {1} -- bash' \
         --header '╱ Enter (kubectl exec) ╱ CTRL-O (open log in vim) ╱'

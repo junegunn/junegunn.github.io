@@ -125,8 +125,7 @@ standard input, let's bind `start` event to `reload` action for consistency.
 
 ```sh {hl_lines=[1, 2, 4]}
 (RELOAD='reload:rg --column --color=always --smart-case {q} || :'
- fzf < /dev/null \
-     --disabled --ansi \
+ fzf --disabled --ansi \
      --bind "start:$RELOAD" --bind "change:$RELOAD")
 ```
 
@@ -137,8 +136,6 @@ standard input, let's bind `start` event to `reload` action for consistency.
   the pattern. Otherwise, fzf will show `[Command failed: rg --column
   --color=always --smart-case '...']` message on screen.
 * `start:reload` will immediately replace the initial list.
-* `< /dev/null` will prevent fzf doing unnecessary work of preparing the
-  initial list that is going to be thrown away.
 
 
 ### 5. Add preview window
@@ -150,8 +147,7 @@ file. You can install it with `brew install bat`.
 
 ```sh {hl_lines=[5, 6, 7]}
 (RELOAD='reload:rg --column --color=always --smart-case {q} || :'
- fzf < /dev/null \
-     --disabled --ansi \
+ fzf --disabled --ansi \
      --bind "start:$RELOAD" --bind "change:$RELOAD" \
      --delimiter : \
      --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
@@ -171,7 +167,7 @@ Nice, but we can still do better.
 
 ```sh {hl_lines=[6, 7]}
 (RELOAD='reload:rg --column --color=always --smart-case {q} || :'
- fzf < /dev/null \
+ fzf 
      --disabled --ansi \
      --bind "start:$RELOAD" --bind "change:$RELOAD" \
      --delimiter : \
@@ -207,8 +203,7 @@ Nice, but we can still do better.
 
 ```sh {hl_lines=[5]}
 (RELOAD='reload:rg --column --color=always --smart-case {q} || :'
- fzf < /dev/null \
-     --disabled --ansi \
+ fzf --disabled --ansi \
      --bind "start:$RELOAD" --bind "change:$RELOAD" \
      --bind 'enter:become:vim {1} +{2}' \
      --delimiter : \
@@ -226,8 +221,7 @@ continue searching. Let's add an `execute` binding for that.
 
 ```sh {hl_lines=[6]}
 (RELOAD='reload:rg --column --color=always --smart-case {q} || :'
- fzf < /dev/null \
-     --disabled --ansi \
+ fzf --disabled --ansi \
      --bind "start:$RELOAD" --bind "change:$RELOAD" \
      --bind 'enter:become:vim {1} +{2}' \
      --bind 'ctrl-o:execute:vim {1} +{2}' \
@@ -250,8 +244,7 @@ so you can select multiple lines with `TAB` and `SHIFT-TAB`.
          else
            vim +cw -q {+f}  # Build quickfix list for the selected items.
          fi'
- fzf < /dev/null \
-     --disabled --ansi --multi \
+ fzf --disabled --ansi --multi \
      --bind "start:$RELOAD" --bind "change:$RELOAD" \
      --bind "enter:become:$OPENER" \
      --bind "ctrl-o:execute:$OPENER" \
@@ -291,8 +284,7 @@ rfv() (
           else
             vim +cw -q {+f}  # Build quickfix list for the selected items.
           fi'
-  fzf < /dev/null \
-      --disabled --ansi --multi \
+  fzf --disabled --ansi --multi \
       --bind "start:$RELOAD" --bind "change:$RELOAD" \
       --bind "enter:become:$OPENER" \
       --bind "ctrl-o:execute:$OPENER" \
