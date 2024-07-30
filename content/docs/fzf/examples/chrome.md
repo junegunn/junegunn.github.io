@@ -1,6 +1,7 @@
 ---
 weight: 2
 title: Chrome history
+slug: chrome
 params:
   long: Browsing Chrome history and bookmarks with fzf
 ---
