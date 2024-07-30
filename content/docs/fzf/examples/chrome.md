@@ -1,6 +1,6 @@
 ---
 weight: 2
-title: Chrome
+title: Chrome history
 params:
   long: Browsing Chrome history and bookmarks with fzf
 ---
@@ -8,7 +8,9 @@ params:
 # Browsing Chrome history and bookmarks with fzf
 
 In this example, you'll learn how to browse Chrome history and bookmarks from
-command-line using fzf.
+the command-line using [fzf].
+
+[fzf]: https://junegunn.github.io/fzf/
 
 ## Getting the input data
 
@@ -16,7 +18,35 @@ Chrome manages the browsing history in an SQLite database file, and the
 bookmarks in a JSON file. For example, on macOS, the files are located at:
 
 * `~/Library/Application Support/Google/Chrome/Default/History`
+    * ```sh
+      # The file is locked if Chrome is running, so you need to make a copy
+      cp ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+
+      sqlite3 /tmp/h '.schema urls'
+      ```
+      ```sql
+      CREATE TABLE urls(
+        id              INTEGER PRIMARY KEY AUTOINCREMENT,
+        url             LONGVARCHAR,
+        title           LONGVARCHAR,
+        visit_count     INTEGER DEFAULT 0 NOT NULL,
+        typed_count     INTEGER DEFAULT 0 NOT NULL,
+        last_visit_time INTEGER NOT NULL,
+        hidden          INTEGER DEFAULT 0 NOT NULL
+      );
+      CREATE INDEX urls_url_index ON urls (url);
+      ```
 * `~/Library/Application Support/Google/Chrome/Default/Bookmarks`
+    * ```sh
+      jq '.roots | keys' ~/Library/Application\ Support/Google/Chrome/Default/Bookmarks
+      ```
+      ```json
+      [
+        "bookmark_bar",
+        "other",
+        "synced"
+      ]
+      ```
 
 While it's not impossible to process these files using shell script, it's
 challenging and probably not worth the effort, especially because the
@@ -26,12 +56,14 @@ this example because I'm most comfortable with it, but any language of your
 choice will do.
 
 See [Using fzf in your program](/fzf/tips/using-fzf-in-your-program/)
-to learn how to integrate fzf in your program.
+to learn how to integrate fzf into your program.
 
 ## Integration ideas
 
 * Allow selecting multiple items and open them all at once
     * `--multi` (tab and shift-tab to select multiple items)
+* Enable [line wrapping](/fzf/releases/0.54.0/) so that long URLs are not truncated
+    * `--wrap`
 * Use [multi-line feature](/fzf/tips/processing-multi-line-items/) of fzf to
   display the title of the page and the URL in separate lines
     * `--read0`
@@ -40,13 +72,13 @@ to learn how to integrate fzf in your program.
 * Open the selected URLs when you hit `Enter`, but do not close fzf so you can
   continue browsing
     * `--bind enter:execute-silent(...)+deselect-all`
-* Show the current mode in the border label
+* Show the current mode in [the border label](https://github.com/junegunn/fzf/blob/master/CHANGELOG.md#0350)
     * `--border-label " Chrome::History "`
 * Provide bindings to switch between history mode and bookmarks mode
     * `--bind ctrl-b:reload(...)+change-border-label(...)+top`
     * `--bind ctrl-h:reload(...)+change-border-label(...)+top`
 * Provide a binding to copy the selected URLs to the clipboard
-    * `--bind ctrl-y:execute-silent(...)+deslect-all`
+    * `--bind ctrl-y:execute-silent(...)+deselect-all`
 
 ## Screenshot
 
