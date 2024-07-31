@@ -83,7 +83,7 @@ to learn how to integrate fzf into your program.
 
 ## Screenshot
 
-{{< figure src="/fzf/images/chrome.fzf.history.png" >}}
+{{< figure src="/fzf/images/chrome.fzf.png" >}}
 
 ## The code
 
