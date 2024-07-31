@@ -19,35 +19,35 @@ Chrome manages the browsing history in an SQLite database file, and the
 bookmarks in a JSON file. For example, on macOS, the files are located at:
 
 * `~/Library/Application Support/Google/Chrome/Default/History`
-    * ```sh
-      # The file is locked if Chrome is running, so you need to make a copy
-      cp ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+   ```sh
+   # The file is locked if Chrome is running, so you need to make a copy
+   cp ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
 
-      sqlite3 /tmp/h '.schema urls'
-      ```
-      ```sql
-      CREATE TABLE urls(
-        id              INTEGER PRIMARY KEY AUTOINCREMENT,
-        url             LONGVARCHAR,
-        title           LONGVARCHAR,
-        visit_count     INTEGER DEFAULT 0 NOT NULL,
-        typed_count     INTEGER DEFAULT 0 NOT NULL,
-        last_visit_time INTEGER NOT NULL,
-        hidden          INTEGER DEFAULT 0 NOT NULL
-      );
-      CREATE INDEX urls_url_index ON urls (url);
-      ```
+   sqlite3 /tmp/h '.schema urls'
+   ```
+   ```sql
+   CREATE TABLE urls(
+     id              INTEGER PRIMARY KEY AUTOINCREMENT,
+     url             LONGVARCHAR,
+     title           LONGVARCHAR,
+     visit_count     INTEGER DEFAULT 0 NOT NULL,
+     typed_count     INTEGER DEFAULT 0 NOT NULL,
+     last_visit_time INTEGER NOT NULL,
+     hidden          INTEGER DEFAULT 0 NOT NULL
+   );
+   CREATE INDEX urls_url_index ON urls (url);
+   ```
 * `~/Library/Application Support/Google/Chrome/Default/Bookmarks`
-    * ```sh
-      jq '.roots | keys' ~/Library/Application\ Support/Google/Chrome/Default/Bookmarks
-      ```
-      ```json
-      [
-        "bookmark_bar",
-        "other",
-        "synced"
-      ]
-      ```
+  ```sh
+  jq '.roots | keys' ~/Library/Application\ Support/Google/Chrome/Default/Bookmarks
+  ```
+  ```json
+  [
+    "bookmark_bar",
+    "other",
+    "synced"
+  ]
+  ```
 
 While it's not impossible to process these files using shell script, it's
 challenging and probably not worth the effort, especially because the
@@ -191,8 +191,7 @@ module ChromeFzf
 
     JSON.load_file(path('Bookmarks'), symbolize_names: true)
         .fetch(:roots, {})
-        .values_at(*%i[bookmark_bar synced other])
-        .compact
+        .values
         .flat_map { |e| build[nil, e] }
         .sort_by(&:last)
         .reverse
@@ -208,3 +207,10 @@ type = case ARGV[0]&.downcase
 
 ChromeFzf.send(method, type)
 ```
+
+{{< notice >}}
+* In both cases, the entries are sorted by the last visit time in descending
+  order.
+* If you don't want to keep fzf open after you press enter, change
+  `enter:execute-silent` to `enter:become`.
+{{< /notice >}}
