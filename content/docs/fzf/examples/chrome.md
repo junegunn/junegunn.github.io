@@ -151,7 +151,7 @@ module ChromeFzf
   # Build fzf command
   def fzf(name)
     <<~CMD
-      fzf --ansi --read0 --multi --info inline-right --reverse \\
+      fzf --ansi --read0 --multi --info inline-right --reverse --scheme history \\
           --highlight-line --cycle --tmux 100% --wrap --wrap-sign ' ↳ ' \\
           --border --border-label " Chrome::#{name.capitalize} " --delimiter "\n · " \\
           --header '╱ CTRL-B: Bookmarks ╱ CTRL-H: History ╱ CTRL-Y: Copy to clipboard ╱\n\n' \\
@@ -210,7 +210,8 @@ ChromeFzf.send(method, type)
 
 {{< notice >}}
 * In both cases, the entries are sorted by the last visit time in descending
-  order.
+  order. We use [`--scheme history`](/fzf/reference/#--schemescheme) to give
+  more weight to this ordering.
 * If you don't want to keep fzf open after you press enter, change
   `enter:execute-silent` to `enter:become`.
 {{< /notice >}}
