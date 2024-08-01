@@ -90,15 +90,16 @@ to learn how to integrate fzf into your program.
 Store the following code in a file, say `chrome.fzf`, put in in your `$PATH`,
 and make it executable, so you can run it from anywhere.
 
-The script is written for macOS, so if you're on another platform, you'll need
-to change `OPEN_COMMAND` and `CLIP_COMMAND` to the commands that work on your
-platform.
+The script was only tested on macOS, so if you're on another platform, you may
+need to change `OPEN_COMMAND` and `CLIP_COMMAND` to the commands that work on
+your platform.
 
 ```ruby {lineNos=inline}
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
 require 'bundler/inline'
+require 'rbconfig'
 require 'tempfile'
 require 'json'
 require 'open3'
@@ -114,16 +115,17 @@ end
 module ChromeFzf
   extend self
 
-  # Platform-specific constants. These are for macOS. (FIXME)
-  OPEN_COMMAND = 'open {+2}'
-  CLIP_COMMAND = 'echo -n {+2} | pbcopy'
-
-  BASE_PATHS =
-    case RUBY_PLATFORM
-    when /darwin/ then ['Library/Application Support/Google/Chrome/Default']
-    when /linux/ then ['.config/google-chrome/Default', '.config/chromium/Default']
-    else ['AppData\Local\Google\Chrome\User Data\Default']
-    end.map { File.join(Dir.home, _1) }
+  # Platform-specific constants.
+  # FIXME: Commands for Linux and Windows are not tested.
+  BASE_PATH, OPEN_COMMAND, CLIP_COMMAND =
+    case RbConfig::CONFIG['host_os']
+    when /darwin/
+      ['Library/Application Support/Google/Chrome', 'open {+2}', 'echo -n {+2} | pbcopy']
+    when /linux/
+      ['.config/google-chrome', 'xdg-open {+2}', 'echo -n {+2} | xsel --clipboard --input']
+    else
+      ['AppData\Local\Google\Chrome\User Data', 'start {+2}', 'echo {+2} | clip']
+    end
 
   def run(type)
     Open3.popen2(fzf(type)) do |stdin, _stdout|
@@ -141,12 +143,7 @@ module ChromeFzf
 
   private
 
-  # Return the full path to the specified field
-  def path(name)
-    BASE_PATHS.lazy
-              .map { |base| File.expand_path(File.join(base, name)) }
-              .find { |path| File.exist?(path) } || raise("Cannot find #{name}")
-  end
+  def path(name) = File.join(Dir.home, BASE_PATH, 'Default', name)
 
   # Build fzf command
   def fzf(name)
@@ -180,9 +177,8 @@ module ChromeFzf
 
   def bookmarks
     build = lambda do |parent, json|
-      json => { name:, type: }
-      name = [parent, name].compact.join('/')
-      if type == 'folder'
+      name = [parent, json[:name]].compact.join('/')
+      if json[:type] == 'folder'
         json[:children].flat_map { |child| build[name, child] }
       else
         [[name, json[:url], json.values_at(:date_last_used, :date_added).max]]
