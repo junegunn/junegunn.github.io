@@ -1,6 +1,6 @@
 ---
 weight: 1
-title: "Directory Nagivation"
+title: "Directory nagivation"
 ---
 
 # Directory navigation with fzf
