@@ -49,8 +49,7 @@ its efficient fuzzy matching algorithm, and with the `--preview` option, we
 not only see the list of the objects, but also the details of each entry,
 without having to run additional commands.
 
-{{< figure
-src="https://user-images.githubusercontent.com/700826/185568470-20d70937-eea4-4274-aec5-14dfe7ee2de6.png" >}}
+{{< figure src="/fzf/images/fzf-git-objects.gif" width=1200 height=800 >}}
 
 The bindings are available in
 [fzf-git.sh](https://github.com/junegunn/fzf-git.sh) respository. Thank me
