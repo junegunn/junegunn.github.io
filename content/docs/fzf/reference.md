@@ -1088,6 +1088,19 @@ A term can be prefixed by `^`, or suffixed by `$` to become an
 anchored-match term. Then fzf will search for the lines that start with or end
 with the given string. An anchored-match term is also an exact-match term.
 
+### Exact-boundary-match (quoted both ends)
+A single-quoted term is interpreted as an "exact-boundary-match". fzf will
+search for the exact occurrences of the string with both ends at the word
+boundaries. Unlike in regular expressions, this also sees an underscore as
+a word boundary. But the words around underscores are ranked lower and appear
+later in the result than the other words around the other types of word
+boundaries.
+
+1. `xxx foo xxx` (highest score)
+2. `xxx foo_xxx`
+3. `xxx_foo xxx`
+4. `xxx_foo_xxx` (lowest score)
+
 ### Negation
 If a term is prefixed by `!`, fzf will exclude the lines that satisfy the
 term from the result. In this case, fzf performs exact match by default.
