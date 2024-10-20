@@ -168,6 +168,10 @@ Indicator for wrapped lines. The default is `↳ ` or `> ` depending on
 
 Disable multi-line display of items when using `--read0`
 
+### `--gap[=N]`
+
+Render empty lines between each item
+
 ### `--keep-right`
 
 Keep the right end of the line visible when it's too long. Effective only when
@@ -734,6 +738,7 @@ Determines the layout of the preview window.
   done
   ```
 * Cyclic scrolling is enabled with `cycle` flag.
+* To hide the scroll offset information on the top right corner, specify `noinfo`.
 * To change the style of the border of the preview window, specify one of the
   options for `--border` with `border-` prefix. e.g. `border-rounded` (border
   with rounded edges, default), `border-sharp` (border with sharp edges),
