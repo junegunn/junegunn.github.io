@@ -65,7 +65,8 @@ Plug 'junegunn/vim-after-object'
 
 Plug 'morhetz/gruvbox'
   let g:gruvbox_contrast_dark = 'soft'
-  autocmd VimEnter * silent! colorscheme gruvbox
+  autocmd VimEnter * nested silent! colorscheme gruvbox
+  " You want 'nested' in case there are ColorScheme autocmds
 
 call plug#end()
 ```
