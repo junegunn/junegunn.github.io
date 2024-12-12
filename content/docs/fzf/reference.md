@@ -746,7 +746,8 @@ Determines the layout of the preview window.
 * `[:+SCROLL[OFFSETS][/DENOM]]` determines the initial scroll offset of the
   preview window.
   * `SCROLL` can be either a numeric integer or a single-field index
-    expression that refers to a numeric integer.
+    expression that refers to a numeric integer or `{n}` to refer to the
+    zero-based ordinal index of the current item.
   * The optional `OFFSETS` part is for adjusting the base offset. It should be
     given as a series of signed integers (`-INTEGER` or `+INTEGER`).
   * The final `/DENOM` part is for specifying a fraction of the preview window
@@ -948,9 +949,9 @@ Determines the behavior of the built-in directory walker that is used when
 * `follow` --- Follow symbolic links
 
 
-### `--walker-root=DIR`
+### `--walker-root=DIR [...]`
 
-The root directory from which to start the built-in directory walker.
+List of directory names to start the built-in directory walker.
 The default value is the current working directory.
 
 ### `--walker-skip=DIRS`
@@ -1048,30 +1049,25 @@ of field index expressions.
 
 fzf exports the following environment variables to its child processes.
 
-| Variable            | Description                                                 |
-| ---                 | ---                                                         |
-| `FZF_LINES`         | Number of lines fzf takes up excluding padding and margin   |
-| `FZF_COLUMNS`       | Number of columns fzf takes up excluding padding and margin |
-| `FZF_TOTAL_COUNT`   | Total number of items                                       |
-| `FZF_MATCH_COUNT`   | Number of matched items                                     |
-| `FZF_SELECT_COUNT`  | Number of selected items                                    |
-| `FZF_POS`           | Vertical position of the cursor in the list starting from 1 |
-| `FZF_QUERY`         | Current query string                                        |
-| `FZF_PROMPT`        | Prompt string                                               |
-| `FZF_PREVIEW_LABEL` | Preview label string                                        |
-| `FZF_BORDER_LABEL`  | Border label string                                         |
-| `FZF_ACTION`        | The name of the last action performed                       |
-| `FZF_KEY`           | The name of the last key pressed                            |
-| `FZF_PORT`          | Port number when --listen option is used                    |
-
-The following variables are additionally exported to the preview commands.
-
-| Variable              | Description                             |
-| ---                   | ---                                     |
-| `FZF_PREVIEW_TOP`     | Top position of the preview window      |
-| `FZF_PREVIEW_LEFT`    | Left position of the preview window     |
-| `FZF_PREVIEW_LINES`   | Number of lines in the preview window   |
-| `FZF_PREVIEW_COLUMNS` | Number of columns in the preview window |
+| Variable              | Description                                                 |
+| ---                   | ---                                                         |
+| `FZF_LINES`           | Number of lines fzf takes up excluding padding and margin   |
+| `FZF_COLUMNS`         | Number of columns fzf takes up excluding padding and margin |
+| `FZF_TOTAL_COUNT`     | Total number of items                                       |
+| `FZF_MATCH_COUNT`     | Number of matched items                                     |
+| `FZF_SELECT_COUNT`    | Number of selected items                                    |
+| `FZF_POS`             | Vertical position of the cursor in the list starting from 1 |
+| `FZF_QUERY`           | Current query string                                        |
+| `FZF_PROMPT`          | Prompt string                                               |
+| `FZF_PREVIEW_LABEL`   | Preview label string                                        |
+| `FZF_BORDER_LABEL`    | Border label string                                         |
+| `FZF_ACTION`          | The name of the last action performed                       |
+| `FZF_KEY`             | The name of the last key pressed                            |
+| `FZF_PORT`            | Port number when --listen option is used                    |
+| `FZF_PREVIEW_TOP`     | Top position of the preview window                          |
+| `FZF_PREVIEW_LEFT`    | Left position of the preview window                         |
+| `FZF_PREVIEW_LINES`   | Number of lines in the preview window                       |
+| `FZF_PREVIEW_COLUMNS` | Number of columns in the preview window                     |
 
 ## Extended search mode
 
