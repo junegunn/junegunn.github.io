@@ -17,9 +17,23 @@ find * -print0 | fzf --read0
 
 ## Customizing multi-line display
 
+### `--gap`
+
+When working with multi-line items, it can be hard to visually separate
+consecutive items. `--gap` option adds a blank line between items to make it
+easier to distinguish them.
+
+#### Without it
+
+{{< figure src="/fzf/images/fzf-multi-line-no-gap.png" >}}
+
+#### With it
+
+{{< figure src="/fzf/images/fzf-multi-line-gap.png" >}}
+
 ### `--highlight-line`
 
-When working with multi-line items, you'll probably want `--highlight-line`
+For multi-line items, you'll probably want `--highlight-line`
 option to highlight the entire line instead of just the text part of each line.
 
 #### Without it
@@ -69,9 +83,9 @@ items. Here are some examples.
 ```bash
 # All bash/zsh functions, highlighted
 declare -f |
-  perl -0 -pe 's/^}\n/}\n\0/gm' |
+  perl -0 -pe 's/^}\n/}\0/gm' |
   bat --plain --language bash --color always |
-  fzf --read0 --ansi --layout reverse --multi --highlight-line
+  fzf --read0 --ansi --layout reverse --multi --highlight-line --gap
 ```
 
 1. Input (declare)
@@ -80,7 +94,7 @@ declare -f |
     * `-0` option sets the input record separator to NUL byte
         * Since `declare -f` doesn't print any NUL bytes, the whole output is
           treated as a single record
-    * We inject a NUL byte after `}\n` making the chunks NUL-separated
+    * We inject a NUL byte after `}` making the chunks NUL-separated
 1. Pre-process (bat)
     * We use [bat] to syntax-highlight the functions
 1. Filter (fzf)
@@ -88,6 +102,7 @@ declare -f |
     * `--ansi` to parse ANSI color codes
     * `--layout reverse` for top-to-bottom layout
     * `--highlight-line` to highlight the entire line instead of just the text part
+    * `--gap` for better visual separation between items
 
 [bat]: https://github.com/sharkdp/bat
 
@@ -105,7 +120,7 @@ recognize each chunk as a single item, we inject NUL bytes.
 # Ripgrep multi-line output
 rg --pretty bash |
   perl -0 -pe 's/\n\n/\n\0/gm' |
-  fzf --read0 --ansi --multi --highlight-line --layout reverse |
+  fzf --read0 --ansi --multi --highlight-line --layout reverse --gap |
   perl -ne '/^([0-9]+:|$)/ or print'
 ```
 
@@ -113,14 +128,13 @@ rg --pretty bash |
     * `--pretty` option for colored, multi-line output
 1. Pre-process (perl)
     * `-0` option to treated the input as a single record
-    * With `s/\n\n/\n\0/gm`, we replace two new line characters with a single new
-      line character followed by a NUL byte. We keep a single new line character
-      for better visual separation between items.
+    * With `s/\n\n/\0/gm`, we replace two new line characters with a NUL byte.
 1. Filter (fzf)
     * `--read0` required for NUL-separated input
     * `--ansi` to parse ANSI color codes
     * `--multi` to allow selecting multiple items
     * `--highlight-line` to highlight the entire line instead of just the text part
+    * `--gap` for better visual separation between items
     * `--layout reverse` for top-to-bottom layout
 1. Post-process (perl)
     * We only keep the lines showing the path by filtering out the other
@@ -140,7 +154,7 @@ rg --column --line-number --no-heading --color=always --smart-case -- bash |
   perl -pe 's/\n/\n\0/; s/^([^:]+:){3}/$&\n  /' |
   fzf --read0 --ansi --highlight-line --multi --delimiter : \
       --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
-      --preview-window '+{2}/4' |
+      --preview-window '+{2}/4' --gap |
   perl -ne '/^([^:]+:){3}/ and print'
 ```
 

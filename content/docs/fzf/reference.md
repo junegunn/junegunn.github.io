@@ -10,7 +10,7 @@ fzf is an interactive filter program for any kind of list.
 It implements a "fuzzy" matching algorithm, so you can quickly type in
 patterns with omitted characters and still get the results you want.
 
-## Search mode
+## SEARCH
 
 {{< notice >}}
 Most long options have the opposite version with `--no-` prefix.
@@ -32,6 +32,10 @@ Case-insensitive match (default: smart-case match)
 ### `+i`, `--no-ignore-case`
 
 Case-sensitive match
+
+### `--smart-case`
+
+Smart-case match
 
 ### `--literal`
 
@@ -74,14 +78,6 @@ Transform the presentation of each line using field index expressions
 Field delimiter regex for `--nth`, `--with-nth`, and field index expressions
 (default: AWK-style)
 
-### `--disabled`
-
-Do not perform search. With this option, fzf becomes a simple selector
-interface rather than a "fuzzy finder". You can later enable the search
-using `enable-search` or `toggle-search` action.
-
-## Search result
-
 ### `+s`, `--no-sort`
 
 Do not sort the result
@@ -97,24 +93,11 @@ memory usage.
 tail -f *.log | fzf --tail 100000 --tac --no-sort --exact
 ```
 
-### `--track`
-Make fzf track the current selection when the result list is updated.
-This can be useful when browsing logs using fzf with sorting disabled. It is
-not recommended to use this option with `--tac` as the resulting behavior
-can be confusing. Also, consider using `track` action instead of this
-option.
+### `--disabled`
 
-```bash
-git log --oneline --graph --color=always | nl |
-    fzf --ansi --track --no-sort --layout=reverse-list
-```
-
-### `--tac`
-Reverse the order of the input
-
-```bash
-history | fzf --tac --no-sort
-```
+Do not perform search. With this option, fzf becomes a simple selector
+interface rather than a "fuzzy finder". You can later enable the search
+using `enable-search` or `toggle-search` action.
 
 ### `--tiebreak=CRI[,..]`
 
@@ -134,80 +117,159 @@ Comma-separated list of sort criteria to apply when the scores are tied.
 - Default is `length` (or equivalently `length,index`)
 - If `end` is found in the list, fzf will scan each line backwards
 
-## Interface
+## INPUT/OUTPUT
 
-### `-m`, `--multi`
-Enable multi-select with tab/shift-tab. It optionally takes an integer argument
-which denotes the maximum number of items that can be selected.
+### `--read0`
 
-### `+m`, `--no-multi`
-Disable multi-select
+Read input delimited by ASCII NUL characters instead of newline characters
 
-### `--no-mouse`
-Disable mouse
+### `--print0`
 
-### `--bind=KEYBINDS`
+### `--ansi`
+Enable processing of ANSI color codes
 
-Comma-separated list of custom key bindings. See [Key/event
-bindings](#keyevent-bindings) for the details.
+### `--sync`
 
-### `--cycle`
+Synchronous search for multi-staged filtering. If specified, fzf will launch
+the finder only after the input stream is complete and the initial filtering
+and the associated actions (bound to any of `start`, `load`, `result`, or
+`focus`) are complete.
 
-Enable cyclic scroll
+```bash
+# Avoid rendering both fzf instances at the same time
+fzf --multi | fzf --sync
 
-### `--wrap`
+# fzf will not render intermediate states
+(sleep 1; seq 1000000; sleep 1) |
+  fzf --sync --query 5 --listen --bind start:up,load:up,result:up,focus:change-header:Ready\fR
+```
 
-Enable line wrap
+## GLOBAL STYLE
 
-### `--wrap-sign=INDICATOR`
+### `--style=PRESET`
 
-Indicator for wrapped lines. The default is `↳ ` or `> ` depending on
-`--no-unicode`.
+Apply a style preset `[default|minimal|full[:BORDER_STYLE]]`
 
-### `--no-multi-line`
+### `--color=EXPR`
 
-Disable multi-line display of items when using `--read0`
+> `[BASE_SCHEME][,COLOR_NAME[:ANSI_COLOR][:ANSI_ATTRIBUTES]]...`
 
-### `--gap[=N]`
+Color configuration. The name of the base color scheme is followed by custom
+color mappings.
 
-Render empty lines between each item
+#### Base scheme
 
-### `--keep-right`
+(default: `dark` on 256-color terminal, otherwise `16`; If `NO_COLOR` is set, `bw`)
 
-Keep the right end of the line visible when it's too long. Effective only when
-the query string is empty.
+| Scheme  | Description                               |
+| ---     | ---                                       |
+| `dark`  | Color scheme for dark 256-color terminal  |
+| `light` | Color scheme for light 256-color terminal |
+| `16`    | Color scheme for 16-color terminal        |
+| `bw`    | No colors (equivalent to `--no-color`)    |
 
-### `--scroll-off=LINES`
+#### Color names
 
-Number of screen lines to keep above or below when scrolling to the top or to
-the bottom (default: 3).
+* `fg`                     --- Text
+  * `list-fg`              --- Text in the list section
+    * `selected-fg`        --- Selected line text
+  * `preview-fg`           --- Preview window text
+* `bg`                     --- Background
+  * `list-bg`              --- List section background
+    * `selected-bg`        --- Selected line background
+  * `preview-bg`           --- Preview window background
+  * `input-bg`             --- Input section background
+  * `header-bg`            --- Header section background
+* `hl`                     --- Highlighted substrings
+  * `selected-hl`          --- Highlighted substrings in the selected line
+* `current-fg` (`fg+`)     --- Text (current line)
+* `current-bg` (`bg+`)     --- Background (current line)
+  * `gutter`               --- Gutter on the left
+* `current-hl` (`hl+`)     --- Highlighted substrings (current line)
+* `query` (`input-fg`)     --- Query string
+  * `disabled`             --- Query string when search is disabled (`--disabled`)
+* `info`                   --- Info line (match counters)
+* `border`                 --- Border around the window (`--border` and `--preview`)
+  * `list-border`          --- Scrollbar
+    * `scrollbar`          --- Scrollbar
+    * `separator`          --- Horizontal separator on info line
+    * `gap-line`           --- Horizontal line on each gap
+  * `preview-border`       --- Border around the preview window (`--preview`)
+    * `preview-scrollbar`  --- Scrollbar
+  * `input-border`         --- Border around the input section (`--input-border`)
+  * `header-border`        --- Border around the header section (`--header-border`)
+* `label`                  --- Border label (`--border-label`, `--list-label`, `--input-label`, and `--preview-label`)
+  * `list-label`           --- Border label of the list section (`--list-label`)
+  * `preview-label`        --- Border label of the preview window (`--preview-label`)
+  * `input-label`          --- Border label of the input section (`--input-label`)
+  * `header-label`         --- Border label of the header section (`--header-label`)
+* `prompt`                 --- Prompt
+* `pointer`                --- Pointer to the current line
+* `marker`                 --- Multi-select marker
+* `spinner`                --- Streaming input indicator
+* `header` (`header-fg`)   --- Header
 
-### `--no-hscroll`
+#### ANSI colors
 
-Disable horizontal scroll
+* `-1`          --- Default terminal foreground/background color (or the original color of the text)
+* 0 ~ 15      --- 16 base colors
+  * `black`
+  * `red`
+  * `green`
+  * `yellow`
+  * `blue`
+  * `magenta`
+  * `cyan`
+  * `white`
+  * `bright-black` (`gray` | `grey`)
+  * `bright-red`
+  * `bright-green`
+  * `bright-yellow`
+  * `bright-blue`
+  * `bright-magenta`
+  * `bright-cyan`
+  * `bright-white`
+* 16 ~ 255 --- ANSI 256 colors
+* `#rrggbb` --- 24-bit colors
 
-### `--hscroll-off=COLS`
+#### ANSI ATTRIBUTES
 
-Number of screen columns to keep to the right of the highlighted substring
-(default: 10). Setting it to a large value will cause the text to be positioned
-on the center of the screen.
+(Only applies to foreground colors)
 
-### `--filepath-word`
+* `regular` --- Clears previously set attributes; should precede the other ones
+* `bold`
+* `underline`
+* `reverse`
+* `dim`
+* `italic`
+* `strikethrough`
 
-Make word-wise movements and actions respect path separators. The following
-actions are affected:
+#### EXAMPLES
 
-* `backward-kill-word`
-* `backward-word`
-* `forward-word`
-* `kill-word`
+```bash
+# Seoul256 theme with 8-bit colors
+# (https://github.com/junegunn/seoul256.vim)
+fzf --color='bg:237,bg+:236,info:143,border:240,spinner:108' \
+    --color='hl:65,fg:252,header:65,fg+:252' \
+    --color='pointer:161,marker:168,prompt:110,hl+:108'
 
+# Seoul256 theme with 24-bit colors
+fzf --color='bg:#4B4B4B,bg+:#3F3F3F,info:#BDBB72,border:#6B6B6B,spinner:#98BC99' \
+    --color='hl:#719872,fg:#D9D9D9,header:#719872,fg+:#D9D9D9' \
+    --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#98BC99'
+```
 
-### `--jump-labels=CHARS`
+### `--no-color`
 
-Label characters for `jump` mode.
+Disable colors
 
-## Layout
+### `--no-bold`
+Do not use bold text
+
+### `--black`
+Use black background
+
+## DISPLAY MODE
 
 ### `--height=EXPR`
 
@@ -244,7 +306,7 @@ Ignored when `--height` is not specified.
 
 ### `--tmux[=EXPR]`
 
-> `[center|top|bottom|left|right][,SIZE[%]][,SIZE[%]]`
+> `[center|top|bottom|left|right][,SIZE[%]][,SIZE[%]][,border-native]]`
 
 Start fzf in a tmux popup (default `center,50%`). Requires tmux 3.3 or later.
 This option is ignored if you are not running fzf inside tmux.
@@ -261,7 +323,12 @@ fzf --tmux bottom,30%
 
 # Popup on the top with 80% width and 40% height
 fzf --tmux top,80%,40%
+
+# Popup with a native tmux border in the center with 80% width and height
+fzf --tmux center,80%,border-native
 ```
+
+## LAYOUT
 
 ### `--layout=LAYOUT`
 
@@ -277,7 +344,43 @@ Choose the layout (default: `default`)
 
 A synonym for `--layout=reverse`
 
-### `--border[=BORDER_OPT]`
+### `--margin=MARGIN`
+
+Comma-separated expression for margins around the finder.
+
+| Expression | Description                                  |
+| ---        | ---                                          |
+| `TRBL`       | Same margin for top, right, bottom, and left |
+| `TB,RL`      | Vertical, horizontal margin                  |
+| `T,RL,B`     | Top, horizontal, bottom margin               |
+| `T,R,B,L`    | Top, right, bottom, left margin              |
+
+Each part can be given in absolute number or in percentage relative to the
+terminal size with `%` suffix.
+
+```bash
+fzf --margin 10%
+fzf --margin 1,5%
+```
+
+### `--padding=PADDING`
+
+Comma-separated expression for padding inside the border. Padding is
+distinguishable from margin only when `--border` option is used.
+
+```bash
+fzf --margin 5% --padding 5% --border --preview 'cat {}' \
+    --color bg:#222222,preview-bg:#333333
+```
+
+| Expression | Description                                   |
+| ---        | ---                                           |
+| `TRBL`       | Same padding for top, right, bottom, and left |
+| `TB,RL`      | Vertical, horizontal padding                  |
+| `T,RL,B`     | Top, horizontal, bottom padding               |
+| `T,R,B,L`    | Top, right, bottom, left padding              |
+
+### `--border[=STYLE]`
 
 Draw border around the finder
 
@@ -340,54 +443,125 @@ the label. Label is printed on the top border line by default, add `:bottom`
 to put it on the border line on the bottom. The default value `0` (or
 `center`) will put the label at the center of the border line.
 
-### `--no-unicode`
+## LIST SECTION
 
-Use ASCII characters instead of Unicode drawing characters to draw borders,
-the spinner and the horizontal separator.
+### `-m`, `--multi`
+Enable multi-select with tab/shift-tab. It optionally takes an integer argument
+which denotes the maximum number of items that can be selected.
 
-### `--ambidouble`
+### `+m`, `--no-multi`
+Disable multi-select
 
-Set this option if your terminal displays ambiguous width characters (e.g.
-box-drawing characters for borders) as 2 columns.
+### `--highlight-line`
+Highlight the whole current line
 
-### `--margin=MARGIN`
+### `--cycle`
 
-Comma-separated expression for margins around the finder.
+Enable cyclic scroll
 
-| Expression | Description                                  |
-| ---        | ---                                          |
-| `TRBL`       | Same margin for top, right, bottom, and left |
-| `TB,RL`      | Vertical, horizontal margin                  |
-| `T,RL,B`     | Top, horizontal, bottom margin               |
-| `T,R,B,L`    | Top, right, bottom, left margin              |
+### `--wrap`
 
-Each part can be given in absolute number or in percentage relative to the
-terminal size with `%` suffix.
+Enable line wrap
 
+### `--wrap-sign=INDICATOR`
 
+Indicator for wrapped lines. The default is `↳ ` or `> ` depending on
+`--no-unicode`.
+
+### `--no-multi-line`
+
+Disable multi-line display of items when using `--read0`
+
+### `--track`
+Make fzf track the current selection when the result list is updated.
+This can be useful when browsing logs using fzf with sorting disabled. It is
+not recommended to use this option with `--tac` as the resulting behavior
+can be confusing. Also, consider using `track` action instead of this
+option.
 
 ```bash
-fzf --margin 10%
-fzf --margin 1,5%
+git log --oneline --graph --color=always | nl |
+    fzf --ansi --track --no-sort --layout=reverse-list
 ```
 
-### `--padding=PADDING`
-
-Comma-separated expression for padding inside the border. Padding is
-distinguishable from margin only when `--border` option is used.
+### `--tac`
+Reverse the order of the input
 
 ```bash
-fzf --margin 5% --padding 5% --border --preview 'cat {}' \
-    --color bg:#222222,preview-bg:#333333
+history | fzf --tac --no-sort
 ```
 
-| Expression | Description                                   |
-| ---        | ---                                           |
-| `TRBL`       | Same padding for top, right, bottom, and left |
-| `TB,RL`      | Vertical, horizontal padding                  |
-| `T,RL,B`     | Top, horizontal, bottom padding               |
-| `T,R,B,L`    | Top, right, bottom, left padding              |
+### `--gap[=N]`
 
+Render empty lines between each item
+
+### `--keep-right`
+
+Keep the right end of the line visible when it's too long. Effective only when
+the query string is empty.
+
+### `--scroll-off=LINES`
+
+Number of screen lines to keep above or below when scrolling to the top or to
+the bottom (default: 3).
+
+### `--no-hscroll`
+
+Disable horizontal scroll
+
+### `--hscroll-off=COLS`
+
+Number of screen columns to keep to the right of the highlighted substring
+(default: 10). Setting it to a large value will cause the text to be positioned
+on the center of the screen.
+
+### `--jump-labels=CHARS`
+
+Label characters for `jump` mode.
+
+### `--pointer=STR`
+Pointer to the current line (default: `▌` or `>` depending on `--no-unicode`)
+
+### `--marker=STR`
+Multi-select marker (default: `┃` or `>` depending on `--no-unicode`)
+
+### `--marker-multi-line=STR`
+Multi-select marker for multi-line entries. 3 elements for top, middle, and bottom.
+(default: `╻┃╹` or `.|'` depending on `--no-unicode`)
+
+### `--ellipsis=STR`
+Ellipsis to show when line is truncated (default: '..')
+
+### `--tabstop=" SPACES
+Number of spaces for a tab character (default: 8)
+
+### `--scrollbar=CHAR1[CHAR2]`
+
+Use the given character to render scrollbar. (default: `│` or `:` depending on
+`--no-unicode`). The optional `CHAR2` is used to render scrollbar of
+the preview window.
+
+### `--no-scrollbar`
+Do not display scrollbar. A synonym for `--scrollbar=''`
+
+### `--list-border[=STYLE]`
+
+Draw border around the list section
+
+### `--list-label=LABEL`
+
+Label to print on the list border
+
+### `--list-label-pos=EXPR`
+
+> `N[:top|bottom]`
+
+Position of the list label
+
+## INPUT SECTION
+
+### `--prompt=STR`
+Input prompt (default: `> `)
 
 ### `--info=STYLE`
 
@@ -433,173 +607,31 @@ ANSI color codes are supported.
 Do not display horizontal separator on the info line. A synonym for
 `--separator=''`
 
-### `--scrollbar=CHAR1[CHAR2]`
+### `--filepath-word`
 
-Use the given character to render scrollbar. (default: `│` or `:` depending on
-`--no-unicode`). The optional `CHAR2` is used to render scrollbar of
-the preview window.
+Make word-wise movements and actions respect path separators. The following
+actions are affected:
 
-### `--no-scrollbar`
-Do not display scrollbar. A synonym for `--scrollbar=''`
+* `backward-kill-word`
+* `backward-word`
+* `forward-word`
+* `kill-word`
 
-### `--prompt=STR`
-Input prompt (default: `> `)
+### `--input-border[=STYLE]`
 
-### `--pointer=STR`
-Pointer to the current line (default: `▌` or `>` depending on `--no-unicode`)
+Draw border around the input section
 
-### `--marker=STR`
-Multi-select marker (default: `┃` or `>` depending on `--no-unicode`)
+### `--input-label=LABEL`
 
-### `--marker-multi-line=STR`
-Multi-select marker for multi-line entries. 3 elements for top, middle, and bottom.
-(default: `╻┃╹` or `.|'` depending on `--no-unicode`)
+Label to print on the input border
 
-### `--header=STR`
-The given string will be printed as the sticky header. The lines are displayed
-in the given order from top to bottom regardless of `--layout` option, and
-are not affected by `--with-nth`. ANSI color codes are processed even when
-`--ansi` is not set.
+### `--input-label-pos=EXPR`
 
-### `--header-lines=N`
-The first N lines of the input are treated as the sticky header. When
-`--with-nth` is set, the lines are transformed just like the other
-lines that follow.
+> `N[:top|bottom]`
 
-### `--header-first`
-Print header before the prompt line
+Position of the input label
 
-### `--ellipsis=STR`
-Ellipsis to show when line is truncated (default: '..')
-
-## Display
-
-### `--ansi`
-Enable processing of ANSI color codes
-
-### `--tabstop=" SPACES
-Number of spaces for a tab character (default: 8)
-
-### `--color=EXPR`
-
-> `[BASE_SCHEME][,COLOR_NAME[:ANSI_COLOR][:ANSI_ATTRIBUTES]]...`
-
-Color configuration. The name of the base color scheme is followed by custom
-color mappings.
-
-#### Base scheme
-
-(default: `dark` on 256-color terminal, otherwise `16`; If `NO_COLOR` is set, `bw`)
-
-| Scheme  | Description                               |
-| ---     | ---                                       |
-| `dark`  | Color scheme for dark 256-color terminal  |
-| `light` | Color scheme for light 256-color terminal |
-| `16`    | Color scheme for 16-color terminal        |
-| `bw`    | No colors (equivalent to `--no-color`)    |
-
-#### Color names
-
-* `fg`                   --- Text
-  * `selected-fg`        --- Selected line text
-  * `preview-fg`         --- Preview window text
-* `bg`                   --- Background
-  * `selected-bg`        --- Selected line background
-  * `preview-bg`         --- Preview window background
-* `hl`                   --- Highlighted substrings
-  * `selected-hl`        --- Highlighted substrings in the selected line
-* `current-fg` (`fg+`)     --- Text (current line)
-* `current-bg` (`bg+`)     --- Background (current line)
-  * `gutter`             --- Gutter on the left
-* `current-hl` (hl+)     --- Highlighted substrings (current line)
-* `query`                --- Query string
-  * `disabled`           --- Query string when search is disabled (`--disabled`)
-* `info`                 --- Info line (match counters)
-* `border`               --- Border around the window (`--border` and `--preview`)
-  * `scrollbar`          --- Scrollbar
-  * `preview-border`     --- Border around the preview window (`--preview`)
-  * `preview-scrollbar`  --- Scrollbar
-  * `separator`          --- Horizontal separator on info line
-* `label`                --- Border label (`--border-label` and `--preview-label`)
-  * `preview-label`      --- Border label of the preview window (`--preview-label`)
-* `prompt`               --- Prompt
-* `pointer`              --- Pointer to the current line
-* `marker`               --- Multi-select marker
-* `spinner`              --- Streaming input indicator
-* `header`               --- Header
-
-#### ANSI colors
-
-* `-1`          --- Default terminal foreground/background color (or the original color of the text)
-* 0 ~ 15      --- 16 base colors
-  * `black`
-  * `red`
-  * `green`
-  * `yellow`
-  * `blue`
-  * `magenta`
-  * `cyan`
-  * `white`
-  * `bright-black` (`gray` | `grey`)
-  * `bright-red`
-  * `bright-green`
-  * `bright-yellow`
-  * `bright-blue`
-  * `bright-magenta`
-  * `bright-cyan`
-  * `bright-white`
-* 16 ~ 255 --- ANSI 256 colors
-* `#rrggbb` --- 24-bit colors
-
-#### ANSI ATTRIBUTES
-
-(Only applies to foreground colors)
-
-* `regular` --- Clears previously set attributes; should precede the other ones
-* `bold`
-* `underline`
-* `reverse`
-* `dim`
-* `italic`
-* `strikethrough`
-
-#### EXAMPLES
-
-```bash
-# Seoul256 theme with 8-bit colors
-# (https://github.com/junegunn/seoul256.vim)
-fzf --color='bg:237,bg+:236,info:143,border:240,spinner:108' \
-    --color='hl:65,fg:252,header:65,fg+:252' \
-    --color='pointer:161,marker:168,prompt:110,hl+:108'
-
-# Seoul256 theme with 24-bit colors
-fzf --color='bg:#4B4B4B,bg+:#3F3F3F,info:#BDBB72,border:#6B6B6B,spinner:#98BC99' \
-    --color='hl:#719872,fg:#D9D9D9,header:#719872,fg+:#D9D9D9' \
-    --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#98BC99'
-```
-
-### `--highlight-line`
-Highlight the whole current line
-
-### `--no-bold`
-Do not use bold text
-
-### `--black`
-Use black background
-
-## History
-
-### `--history=HISTORY_FILE`
-
-Load search history from the specified file and update the file on completion.
-When enabled, `CTRL-N` and `CTRL-P` are automatically remapped to
-`next-history` and `prev-history`.
-
-### `--history-size=N`
-Maximum number of entries in the history file (default: 1000). The file is
-automatically truncated when the number of the lines exceeds the value.
-
-## Preview
+## PREVIEW WINDOW
 
 ### `--preview=COMMAND`
 Execute the given command for the current line and display the result on the
@@ -680,6 +712,9 @@ script to render an image using either of the protocols inside the preview windo
 ```bash
 fzf --preview='fzf-preview.sh {}'
 ```
+
+### `--preview-border=STYLE`
+Short for `--preview-window=border-STYLE`
 
 ### `--preview-label=LABEL`
 Label to print on the horizontal border line of the preview window.
@@ -791,7 +826,37 @@ fzf --preview 'bat --style=full --color=always {}' --preview-window '~3'
 fzf --preview 'cat {}' --preview-window 'right,border-left,<30(up,30%,border-bottom)'
 ```
 
-## Scripting
+## HEADER
+
+### `--header=STR`
+The given string will be printed as the sticky header. The lines are displayed
+in the given order from top to bottom regardless of `--layout` option, and
+are not affected by `--with-nth`. ANSI color codes are processed even when
+`--ansi` is not set.
+
+### `--header-lines=N`
+The first N lines of the input are treated as the sticky header. When
+`--with-nth` is set, the lines are transformed just like the other
+lines that follow.
+
+### `--header-first`
+Print header before the prompt line
+
+### `--header-border[=STYLE]`
+
+Draw border around the header section
+
+### `--header-label=LABEL`
+
+Label to print on the header border
+
+### `--header-label-pos=EXPR`
+
+> `N[:top|bottom]`
+
+Position of the header label
+
+## SCRIPTING
 
 ### `-q`, `--query=STR`
 
@@ -836,12 +901,6 @@ precedence over it. To combine the two, use `print` action.
 fzf --multi --bind 'enter:print()+accept,ctrl-y:select-all+print(ctrl-y)+accept'
 ```
 
-### `--read0`
-
-Read input delimited by ASCII NUL characters instead of newline characters
-
-### `--print0`
-
 Print output delimited by ASCII NUL characters instead of newline characters
 
 ### `--no-clear`
@@ -860,21 +919,14 @@ foo=$(seq 100 | fzf --no-clear) || (
 ) && seq "$foo" 100 | fzf
 ```
 
-### `--sync`
+## KEY/EVENT BINDING
 
-Synchronous search for multi-staged filtering. If specified, fzf will launch
-the finder only after the input stream is complete and the initial filtering
-and the associated actions (bound to any of `start`, `load`, `result`, or
-`focus`) are complete.
+### `--bind=BINDINGS`
 
-```bash
-# Avoid rendering both fzf instances at the same time
-fzf --multi | fzf --sync
+Comma-separated list of custom key bindings. See [Key/event
+bindings](#keyevent-bindings) for the details.
 
-# fzf will not render intermediate states
-(sleep 1; seq 1000000; sleep 1) |
-  fzf --sync --query 5 --listen --bind start:up,load:up,result:up,focus:change-header:Ready\fR
-```
+## ADVANCED
 
 ### `--with-shell=STR`
 
@@ -923,18 +975,7 @@ curl -XPOST localhost:6266 -H "x-api-key: $FZF_API_KEY" -d 'change-query(yo)'
 fzf --listen --bind 'start:execute-silent:echo $FZF_PORT > /tmp/fzf-port'
 ```
 
-## Help
-
-### `--version`
-Display version information and exit
-
-### `--help`
-Show help message
-
-### `--man`
-Show man page
-
-## Directory traversal
+## DIRECTORY TRAVERSAL
 
 ### `--walker=EXPR`
 
@@ -959,7 +1000,19 @@ The default value is the current working directory.
 Comma-separated list of directory names to skip during the directory walk.
 The default value is `.git,node_modules`.
 
-## Shell integration
+## HISTORY
+
+### `--history=HISTORY_FILE`
+
+Load search history from the specified file and update the file on completion.
+When enabled, `CTRL-N` and `CTRL-P` are automatically remapped to
+`next-history` and `prev-history`.
+
+### `--history-size=N`
+Maximum number of entries in the history file (default: 1000). The file is
+automatically truncated when the number of the lines exceeds the value.
+
+## SHELL INTEGRATION
 
 ### `--bash`
 
@@ -985,7 +1038,33 @@ Print script to set up Fish shell integration
 fzf --fish | source
 ```
 
-## Environment variableS
+## OTHERS
+
+### `--no-mouse`
+Disable mouse
+
+### `--no-unicode`
+
+Use ASCII characters instead of Unicode drawing characters to draw borders,
+the spinner and the horizontal separator.
+
+### `--ambidouble`
+
+Set this option if your terminal displays ambiguous width characters (e.g.
+box-drawing characters for borders) as 2 columns.
+
+## HELP
+
+### `--version`
+Display version information and exit
+
+### `--help`
+Show help message
+
+### `--man`
+Show man page
+
+## ENVIRONMENT VARIABLES
 
 ### `FZF_DEFAULT_COMMAND`
 
@@ -1058,6 +1137,7 @@ fzf exports the following environment variables to its child processes.
 | `FZF_SELECT_COUNT`    | Number of selected items                                    |
 | `FZF_POS`             | Vertical position of the cursor in the list starting from 1 |
 | `FZF_QUERY`           | Current query string                                        |
+| `FZF_NTH`             | Current `--nth` option                                      |
 | `FZF_PROMPT`          | Prompt string                                               |
 | `FZF_PREVIEW_LABEL`   | Preview label string                                        |
 | `FZF_BORDER_LABEL`    | Border label string                                         |
@@ -1321,8 +1401,12 @@ A key or an event can be bound to one or more of the following actions.
 | `cancel`                       | (clear query string if not empty, abort fzf otherwise)                                       |
 | `change-border-label(...)`     | (change `--border-label` to the given string)                                                |
 | `change-header(...)`           | (change header to the given string; doesn't affect `--header-lines`)                         |
+| `change-header-label(...)`     | (change `--header-label` to the given string)                                                |
+| `change-input-label(...)`      | (change `--input-label` to the given string)                                                 |
+| `change-list-label(...)`       | (change `--list-label` to the given string)                                                  |
 | `change-multi`                 | (enable multi-select mode with no limit)                                                     |
 | `change-multi(...)`            | (enable multi-select mode with a limit or disable it with 0)                                 |
+| `change-nth(...)`              | (change `--nth` option; rotate through the multiple options separated by '|')                |
 | `change-preview(...)`          | (change `--preview` option)                                                                  |
 | `change-preview-label(...)`    | (change `--preview-label` to the given string)                                               |
 | `change-preview-window(...)`   | (change `--preview-window` option; rotate through the multiple option sets separated by '|') |
@@ -1373,7 +1457,7 @@ A key or an event can be bound to one or more of the following actions.
 | `preview-half-page-up`         |                                                                                              |
 | `preview-bottom`               |                                                                                              |
 | `preview-top`                  |                                                                                              |
-| `print(...)`                   | (add string to the output queue and print on exit)                                           |
+| `print(...)`                   | (add string to the output queue and print on normal exit)                                    |
 | `put`                          | (put the character to the prompt)                                                            |
 | `put(...)`                     | (put the given string to the prompt)                                                         |
 | `refresh-preview`              |                                                                                              |
@@ -1403,6 +1487,9 @@ A key or an event can be bound to one or more of the following actions.
 | `transform(...)`               | (transform states using the output of an external command)                                   |
 | `transform-border-label(...)`  | (transform border label using an external command)                                           |
 | `transform-header(...)`        | (transform header using an external command)                                                 |
+| `transform-header-label(...)`  | (transform header label using an external command)                                           |
+| `transform-input-label(...)`   | (transform input label using an external command)                                            |
+| `transform-list-label(...)`    | (transform list label using an external command)                                             |
 | `transform-preview-label(...)` | (transform preview label using an external command)                                          |
 | `transform-prompt(...)`        | (transform prompt string using an external command)                                          |
 | `transform-query(...)`         | (transform query string using an external command)                                           |
