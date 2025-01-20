@@ -119,7 +119,7 @@ recognize each chunk as a single item, we inject NUL bytes.
 ```sh
 # Ripgrep multi-line output
 rg --pretty bash |
-  perl -0 -pe 's/\n\n/\n\0/gm' |
+  perl -0 -pe 's/\n\n/\0/gm' |
   fzf --read0 --ansi --multi --highlight-line --layout reverse --gap |
   perl -ne '/^([0-9]+:|$)/ or print'
 ```
@@ -151,7 +151,7 @@ more readable on narrow screens, especially when preview window is enabled.
 
 ```sh
 rg --column --line-number --no-heading --color=always --smart-case -- bash |
-  perl -pe 's/\n/\n\0/; s/^([^:]+:){3}/$&\n  /' |
+  perl -pe 's/\n/\0/; s/^([^:]+:){3}/$&\n  /' |
   fzf --read0 --ansi --highlight-line --multi --delimiter : \
       --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
       --preview-window '+{2}/4' --gap |
