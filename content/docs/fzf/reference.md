@@ -48,8 +48,13 @@ Choose scoring scheme tailored for different types of input.
 | Scheme | Description |
 | ---    | :---        |
 | `default` | Generic scoring scheme designed to work well with any type of input. |
-| `path` | Additional bonus point is only given to the characters after path separator. You might want to choose this scheme over `default` if you have many files with spaces in their paths. |
+| `path` | Additional bonus point is only given to the characters after path separator. You might want to choose this scheme over `default` if you have many files with spaces in their paths. This also sets `--tiebreak=pathname,length`, to prioritize matches occurring in the tail element of a file path. |
 | `history` | Scoring scheme well suited for command history or any input where chronological ordering is important. No additional bonus points are given so that we give more weight to the chronological ordering. This also sets `--tiebreak=index`. |
+
+fzf chooses `path` scheme when the input is a TTY device, where fzf would
+start its built-in walker or run `$FZF_DEFAULT_COMMAND`, and there is no
+`reload` or `transform` action bound to `start` event. Otherwise, it chooses
+`default` scheme.
 
 ### `--algo=TYPE`
 
@@ -103,13 +108,14 @@ using `enable-search` or `toggle-search` action.
 
 Comma-separated list of sort criteria to apply when the scores are tied.
 
-| Criterion | Description                                                        |
-| ---       | ---                                                                |
-| `length`  | Prefers line with shorter length                                   |
-| `chunk`   | Prefers line with shorter matched chunk (delimited by whitespaces) |
-| `begin`   | Prefers line with matched substring closer to the beginning        |
-| `end`     | Prefers line with matched substring closer to the end              |
-| `index`   | Prefers line that appeared earlier in the input stream             |
+| Criterion  | Description                                                        |
+| ---        | ---                                                                |
+| `length`   | Prefers line with shorter length                                   |
+| `chunk`    | Prefers line with shorter matched chunk (delimited by whitespaces) |
+| `begin`    | Prefers line with matched substring closer to the beginning        |
+| `end`      | Prefers line with matched substring closer to the end              |
+| `pathname` | Prefers line with matched substring in the tail element of a path  |
+| `index`    | Prefers line that appeared earlier in the input stream             |
 
 - Each criterion should appear only once in the list
 - `index` is only allowed at the end of the list
@@ -301,8 +307,10 @@ Adaptive height has the following limitations:
 
 ### `--min-height=HEIGHT`
 
-Minimum height when `--height` is given in percent (default: 10).
-Ignored when `--height` is not specified.
+Minimum height when `--height` is given as a percentage. Add `+` to
+automatically increase the value according to the other layout options so that
+the specified number of items are visible in the list section (default:
+`10+`). Ignored when `--height` is not specified or set as an absolute value.
 
 ### `--tmux[=EXPR]`
 
@@ -560,6 +568,13 @@ Position of the list label
 
 ## INPUT SECTION
 
+### `--no-input`
+
+Disable and hide the input section. You can no longer type in queries. To
+trigger a search, use `search` action. You can later show the input section
+using `show-input` or `toggle-input` action, and hide it again using
+`hide-input`, or `toggle-input`.
+
 ### `--prompt=STR`
 Input prompt (default: `> `)
 
@@ -681,7 +696,7 @@ seq 100000 | fzf --multi --bind ctrl-a:select-all \
 Also,
 
 * `{q}` is replaced to the current query string
-
+* `{q}` can contain field index expressions. e.g. `{q:1}`, `{q:2..}`, etc.
 * `{n}` is replaced to the zero-based ordinal index of the current item.
   Use `{+n}` if you want all index numbers when multiple lines are selected.
 
@@ -855,6 +870,12 @@ Label to print on the header border
 > `N[:top|bottom]`
 
 Position of the header label
+
+### `--header-lines-border[=STYLE]`
+
+Display header from `--header-lines` with a separate border. Pass
+`none` to still separate the header lines but without a border. To combine
+two headers, use `--no-header-lines-border`.
 
 ## SCRIPTING
 
@@ -1205,10 +1226,15 @@ more `actions`. You can use it to customize key bindings or implement
 dynamic behaviors.
 
 `--bind` takes a comma-separated list of binding expressions. Each binding
-expression is `KEY:ACTION` or `EVENT:ACTION`.
+expression is `KEY:ACTION` or `EVENT:ACTION`. You can bind actions to multiple
+keys and events by writing comma-separated list of keys and events before the
+colon. e.g. `KEY1,KEY2,EVENT1,EVENT2:ACTION`.
 
 ```bash
 fzf --bind=ctrl-j:accept,ctrl-k:kill-line
+
+# Load 'ps -ef' output on start and reload it on CTRL-R
+fzf --bind 'start,ctrl-r:reload:ps -ef'
 ```
 
 ### Available keys
@@ -1375,7 +1401,8 @@ fzf --bind space:jump,jump:accept,jump-cancel:abort
 #### `click-header`
 Triggered when a mouse click occurs within the header. Sets
 `FZF_CLICK_HEADER_LINE` and `FZF_CLICK_HEADER_COLUMN` environment variables
-starting from 1.
+starting from 1. It optionally sets `FZF_CLICK_HEADER_WORD` and
+`FZF_CLICK_HEADER_NTH` if clicked on a word.
 
 ```bash
 printf "head1\nhead2" | fzf --header-lines=2 --bind 'click-header:transform-prompt:printf ${FZF_CLICK_HEADER_LINE}x${FZF_CLICK_HEADER_COLUMN}'
@@ -1398,8 +1425,9 @@ A key or an event can be bound to one or more of the following actions.
 | `backward-word`                | `alt-b`   `shift-left`                                                                       |
 | `become(...)`                  | (replace fzf process with the specified command; see below for the details)                  |
 | `beginning-of-line`            | `ctrl-a`  `home`                                                                             |
-| `cancel`                       | (clear query string if not empty, abort fzf otherwise)                                       |
+| `bell`                         | (ring the terminal bell)                                                                     |
 | `change-border-label(...)`     | (change `--border-label` to the given string)                                                |
+| `cancel`                       | (clear query string if not empty, abort fzf otherwise)                                       |
 | `change-header(...)`           | (change header to the given string; doesn't affect `--header-lines`)                         |
 | `change-header-label(...)`     | (change `--header-label` to the given string)                                                |
 | `change-input-label(...)`      | (change `--input-label` to the given string)                                                 |
@@ -1441,6 +1469,7 @@ A key or an event can be bound to one or more of the following actions.
 | `half-page-down`               |                                                                                              |
 | `half-page-up`                 |                                                                                              |
 | `hide-header`                  |                                                                                              |
+| `hide-input`                   |                                                                                              |
 | `hide-preview`                 |                                                                                              |
 | `offset-down`                  | (similar to CTRL-E of Vim)                                                                   |
 | `offset-up`                    | (similar to CTRL-Y of Vim)                                                                   |
@@ -1465,14 +1494,17 @@ A key or an event can be bound to one or more of the following actions.
 | `reload(...)`                  | (see below for the details)                                                                  |
 | `reload-sync(...)`             | (see below for the details)                                                                  |
 | `replace-query`                | (replace query string with the current selection)                                            |
+| `search`                       | (trigger fzf search with the given string)                                                   |
 | `select`                       |                                                                                              |
 | `select-all`                   | (select all matches)                                                                         |
 | `show-header`                  |                                                                                              |
+| `show-input`                   |                                                                                              |
 | `show-preview`                 |                                                                                              |
 | `toggle`                       | (`right-click`)                                                                              |
 | `toggle-all`                   | (toggle all matches)                                                                         |
 | `toggle+down`                  | `ctrl-i  (tab)`                                                                              |
 | `toggle-header`                |                                                                                              |
+| `toggle-input`                 |                                                                                              |
 | `toggle-in`                    | (`--layout=reverse*` ? `toggle+up` : `toggle+down`)                                          |
 | `toggle-out`                   | (`--layout=reverse*` ? `toggle+down` : `toggle+up`)                                          |
 | `toggle-preview`               |                                                                                              |
@@ -1490,9 +1522,11 @@ A key or an event can be bound to one or more of the following actions.
 | `transform-header-label(...)`  | (transform header label using an external command)                                           |
 | `transform-input-label(...)`   | (transform input label using an external command)                                            |
 | `transform-list-label(...)`    | (transform list label using an external command)                                             |
+| `transform-nth(...)`           | (transform nth using an external command)                                                    |
 | `transform-preview-label(...)` | (transform preview label using an external command)                                          |
 | `transform-prompt(...)`        | (transform prompt string using an external command)                                          |
 | `transform-query(...)`         | (transform query string using an external command)                                           |
+| `transform-search(...)`        | (trigger fzf search with the output of an external command)                                  |
 | `unbind(...)`                  | (unbind bindings)                                                                            |
 | `unix-line-discard`            | `ctrl-u`                                                                                     |
 | `unix-word-rubout`             | `ctrl-w`                                                                                     |
