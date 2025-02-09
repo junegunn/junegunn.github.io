@@ -74,9 +74,33 @@ against the transformed lines (unlike in `--preview` where fields are
 extracted from the original lines) because fzf doesn't allow searching against
 the hidden fields.
 
-### `--with-nth=N[,..]`
+### `--with-nth=N[,..] or TEMPLATE`
 
-Transform the presentation of each line using field index expressions
+Transform the presentation of each line using the field index expressions.
+For advanced transformation, you can provide a template containing field index
+expressions in curly braces.
+
+```sh
+# Single expression: drop the first field
+echo foo bar baz | fzf --with-nth 2..
+
+# Use template to rearrange fields
+echo foo,bar,baz | fzf --delimiter , --with-nth '{1},{3},{2},{1..2}'
+```
+
+### `--accept-nth=N[,..] or TEMPLATE`
+
+Define which fields to print on accept. The last delimiter is stripped from
+the output. For advanced transformation, you can provide a template containing
+field index expressions in curly braces.
+
+```sh
+# Single expression
+echo foo bar baz | fzf --accept-nth 2
+
+# Template
+echo foo bar baz | fzf --accept-nth '1st: {1}, 2nd: {2}, 3rd: {3}'
+```
 
 ### `-d`, `--delimiter=STR`
 
@@ -1452,6 +1476,8 @@ A key or an event can be bound to one or more of the following actions.
 | `down`                         | `ctrl-j`  `ctrl-n`  `down`                                                                   |
 | `enable-search`                | (enable search functionality)                                                                |
 | `end-of-line`                  | `ctrl-e`  `end`                                                                              |
+| `exclude`                      | (exclude the current item from the result)                                                   |
+| `exclude-multi`                | (exclude the selected items or the current item from the result)                             |
 | `execute(...)`                 | (see below for the details)                                                                  |
 | `execute-silent(...)`          | (see below for the details)                                                                  |
 | `first`                        | (move to the first match; same as `pos(1)`)                                                  |
