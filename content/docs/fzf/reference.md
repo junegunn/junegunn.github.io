@@ -177,7 +177,7 @@ fzf --multi | fzf --sync
 
 # fzf will not render intermediate states
 (sleep 1; seq 1000000; sleep 1) |
-  fzf --sync --query 5 --listen --bind start:up,load:up,result:up,focus:change-header:Ready\fR
+  fzf --sync --query 5 --listen --bind start:up,load:up,result:up,focus:change-header:Ready
 ```
 
 ## GLOBAL STYLE
@@ -1574,6 +1574,9 @@ Multiple actions can be chained using `+` separator.
 fzf --multi --bind 'ctrl-a:select-all+accept'
 fzf --multi --bind 'ctrl-a:select-all' --bind 'ctrl-a:+accept'
 ```
+
+Any action after a terminal action that exits fzf, such as `accept` or
+`abort`, is ignored.
 
 ## Action argument
 
