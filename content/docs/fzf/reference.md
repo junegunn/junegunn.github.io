@@ -35,7 +35,9 @@ Case-sensitive match
 
 ### `--smart-case`
 
-Smart-case match
+Smart-case match (default). In this mode, the search is case-insensitive by
+default, but it becomes case-sensitive if the query contains any uppercase
+letters.
 
 ### `--literal`
 
@@ -78,7 +80,8 @@ the hidden fields.
 
 Transform the presentation of each line using the field index expressions.
 For advanced transformation, you can provide a template containing field index
-expressions in curly braces.
+expressions in curly braces. When you use a template, the trailing delimiter
+is stripped from each expression, giving you more control over the output.
 
 ```sh
 # Single expression: drop the first field
@@ -92,7 +95,10 @@ echo foo,bar,baz | fzf --delimiter , --with-nth '{1},{3},{2},{1..2}'
 
 Define which fields to print on accept. The last delimiter is stripped from
 the output. For advanced transformation, you can provide a template containing
-field index expressions in curly braces.
+field index expressions in curly braces. When you use a template, the trailing
+delimiter is stripped from each expression, giving you more control over the
+output.
+
 
 ```sh
 # Single expression
