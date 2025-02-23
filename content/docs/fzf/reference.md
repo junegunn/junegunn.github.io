@@ -82,13 +82,14 @@ Transform the presentation of each line using the field index expressions.
 For advanced transformation, you can provide a template containing field index
 expressions in curly braces. When you use a template, the trailing delimiter
 is stripped from each expression, giving you more control over the output.
+`{n}` in template evaluates to the zero-based ordinal index of the line.
 
 ```sh
 # Single expression: drop the first field
 echo foo bar baz | fzf --with-nth 2..
 
 # Use template to rearrange fields
-echo foo,bar,baz | fzf --delimiter , --with-nth '{1},{3},{2},{1..2}'
+echo foo,bar,baz | fzf --delimiter , --with-nth '{n},{1},{3},{2},{1..2}'
 ```
 
 ### `--accept-nth=N[,..] or TEMPLATE`
@@ -97,7 +98,8 @@ Define which fields to print on accept. The last delimiter is stripped from
 the output. For advanced transformation, you can provide a template containing
 field index expressions in curly braces. When you use a template, the trailing
 delimiter is stripped from each expression, giving you more control over the
-output.
+output. `{n}` in template evaluates to the zero-based ordinal index of the
+line.
 
 
 ```sh
@@ -105,7 +107,7 @@ output.
 echo foo bar baz | fzf --accept-nth 2
 
 # Template
-echo foo bar baz | fzf --accept-nth '1st: {1}, 2nd: {2}, 3rd: {3}'
+echo foo bar baz | fzf --accept-nth 'Index: {n}, 1st: {1}, 2nd: {2}, 3rd: {3}'
 ```
 
 ### `-d`, `--delimiter=STR`
