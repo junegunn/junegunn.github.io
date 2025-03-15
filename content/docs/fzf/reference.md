@@ -654,6 +654,10 @@ ANSI color codes are supported.
 Do not display horizontal separator on the info line. A synonym for
 `--separator=''`
 
+### `--ghost=TEXT`
+
+Ghost text to display when the input is empty
+
 ### `--filepath-word`
 
 Make word-wise movements and actions respect path separators. The following
