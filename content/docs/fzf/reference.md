@@ -1471,6 +1471,7 @@ A key or an event can be bound to one or more of the following actions.
 | `change-multi`                 | (enable multi-select mode with no limit)                                                     |
 | `change-multi(...)`            | (enable multi-select mode with a limit or disable it with 0)                                 |
 | `change-nth(...)`              | (change `--nth` option; rotate through the multiple options separated by '|')                |
+| `change-pointer(...)`          | (change `--pointer` option)                                                                  |
 | `change-preview(...)`          | (change `--preview` option)                                                                  |
 | `change-preview-label(...)`    | (change `--preview-label` to the given string)                                               |
 | `change-preview-window(...)`   | (change `--preview-window` option; rotate through the multiple option sets separated by '|') |
@@ -1561,6 +1562,7 @@ A key or an event can be bound to one or more of the following actions.
 | `transform-input-label(...)`   | (transform input label using an external command)                                            |
 | `transform-list-label(...)`    | (transform list label using an external command)                                             |
 | `transform-nth(...)`           | (transform nth using an external command)                                                    |
+| `transform-pointer(...)`       | (transform pointer using an external command)                                                |
 | `transform-preview-label(...)` | (transform preview label using an external command)                                          |
 | `transform-prompt(...)`        | (transform prompt string using an external command)                                          |
 | `transform-query(...)`         | (transform query string using an external command)                                           |
