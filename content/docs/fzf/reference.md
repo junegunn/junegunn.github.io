@@ -1464,6 +1464,7 @@ A key or an event can be bound to one or more of the following actions.
 | `bell`                         | (ring the terminal bell)                                                                     |
 | `change-border-label(...)`     | (change `--border-label` to the given string)                                                |
 | `cancel`                       | (clear query string if not empty, abort fzf otherwise)                                       |
+| `change-ghost(...)`            | (change ghost text to the given string                                                       |
 | `change-header(...)`           | (change header to the given string; doesn't affect `--header-lines`)                         |
 | `change-header-label(...)`     | (change `--header-label` to the given string)                                                |
 | `change-input-label(...)`      | (change `--input-label` to the given string)                                                 |
@@ -1557,6 +1558,7 @@ A key or an event can be bound to one or more of the following actions.
 | `track-current`                | (track the current item; automatically disabled if focus changes)                            |
 | `transform(...)`               | (transform states using the output of an external command)                                   |
 | `transform-border-label(...)`  | (transform border label using an external command)                                           |
+| `transform-ghost(...)`         | (transform ghost text using an external command)                                             |
 | `transform-header(...)`        | (transform header using an external command)                                                 |
 | `transform-header-label(...)`  | (transform header label using an external command)                                           |
 | `transform-input-label(...)`   | (transform input label using an external command)                                            |
