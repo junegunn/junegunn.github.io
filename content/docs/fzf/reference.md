@@ -714,6 +714,12 @@ fzf --multi --preview='head -10 {+}'
 git log --oneline | fzf --multi --preview 'git show {+1}'
 ```
 
+Each expression expands to a quoted string, so that it's safe to pass it as an
+argument to an external command. So you should not manually add quotes around
+the curly braces. But if you don't want this behavior, you can put
+`r` flag (raw) in the expression (e.g. `{r}`, `{r1}`, etc).
+Use it with caution as unquoted output can lead to broken commands.
+
 When using a field index expression, leading and trailing whitespace is stripped
 from the replacement string. To preserve the whitespace, use the `s` flag.
 
