@@ -182,6 +182,13 @@ fzf --multi | fzf --sync
   fzf --sync --query 5 --listen --bind start:up,load:up,result:up,focus:change-header:Ready
 ```
 
+### `--no-tty-default`
+
+Make fzf search for the current TTY device via standard error instead of
+defaulting to `/dev/tty`. This option avoids issues when launching emacsclient
+from within fzf. Alternatively, you can change the default TTY device by
+setting `--tty-default=DEVICE_NAME`.
+
 ## GLOBAL STYLE
 
 ### `--style=PRESET`
