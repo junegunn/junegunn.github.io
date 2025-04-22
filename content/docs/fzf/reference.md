@@ -1209,8 +1209,13 @@ fzf exports the following environment variables to its child processes.
 | `FZF_QUERY`           | Current query string                                        |
 | `FZF_NTH`             | Current `--nth` option                                      |
 | `FZF_PROMPT`          | Prompt string                                               |
+| `FZF_GHOST`           | Ghost string                                                |
+| `FZF_POINTER`         | Pointer string                                              |
 | `FZF_PREVIEW_LABEL`   | Preview label string                                        |
 | `FZF_BORDER_LABEL`    | Border label string                                         |
+| `FZF_LIST_LABEL`      | List label string                                           |
+| `FZF_INPUT_LABEL`     | Input label string                                          |
+| `FZF_HEADER_LABEL`    | Header label string                                         |
 | `FZF_ACTION`          | The name of the last action performed                       |
 | `FZF_KEY`             | The name of the last key pressed                            |
 | `FZF_PORT`            | Port number when --listen option is used                    |
