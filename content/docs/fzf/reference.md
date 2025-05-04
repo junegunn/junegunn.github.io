@@ -200,7 +200,7 @@ Apply a style preset `[default|minimal|full[:BORDER_STYLE]]`
 > `[BASE_SCHEME][,COLOR_NAME[:ANSI_COLOR][:ANSI_ATTRIBUTES]]...`
 
 Color configuration. The name of the base color scheme is followed by custom
-color mappings.
+color mappings. Each entry is separated by a comma and/or whitespaces.
 
 #### Base scheme
 
@@ -231,6 +231,7 @@ color mappings.
 * `current-bg` (`bg+`)     --- Background (current line)
   * `gutter`               --- Gutter on the left
 * `current-hl` (`hl+`)     --- Highlighted substrings (current line)
+* `alt-bg`                 --- Alternate background color to create striped lines
 * `query` (`input-fg`)     --- Query string
   * `disabled`             --- Query string when search is disabled (`--disabled`)
 * `info`                   --- Info line (match counters)
@@ -302,6 +303,18 @@ fzf --color='bg:237,bg+:236,info:143,border:240,spinner:108' \
 fzf --color='bg:#4B4B4B,bg+:#3F3F3F,info:#BDBB72,border:#6B6B6B,spinner:#98BC99' \
     --color='hl:#719872,fg:#D9D9D9,header:#719872,fg+:#D9D9D9' \
     --color='pointer:#E12672,marker:#E17899,prompt:#98BEDE,hl+:#98BC99'
+
+# Seoul256 light theme with 24-bit colors, each entry separated by whitespaces
+fzf --style full --color='
+  fg:#616161 fg+:#616161
+  bg:#ffffff bg+:#e9e9e9 alt-bg:#f1f1f1
+  hl:#719872 hl+:#719899
+  pointer:#e12672 marker:#e17899
+  header:#719872
+  spinner:#719899 info:#727100
+  prompt:#0099bd query:#616161
+  border:#e1e1e1
+'
 ```
 
 ### `--no-color`
