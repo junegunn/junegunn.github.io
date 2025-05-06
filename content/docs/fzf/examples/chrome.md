@@ -8,6 +8,12 @@ params:
 
 # Browsing Chrome history and bookmarks with fzf
 
+{{< notice info >}}
+You might want to check out https://github.com/junegunn/everything.fzf which
+includes a more complete version of this script, along with many other
+integrations.
+{{< /notice >}}
+
 In this example, you'll learn how to browse Chrome history and bookmarks from
 the command-line using [fzf].
 
