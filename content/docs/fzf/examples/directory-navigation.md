@@ -84,7 +84,7 @@ z() {
     _z 2>&1 |
     fzf --height 40% --layout reverse --info inline \
         --nth 2.. --tac --no-sort --query "$*" \
-        --bind 'enter:become:echo {2..}'
+        --accept-nth 2..
   ) && cd "$dir"
 }
 ```
@@ -104,8 +104,8 @@ z() {
   function.
 * By default, when you press enter, fzf prints the entire line to the standard
   output. But we only want the directory name without the score at the front,
-  so we use `--bind 'enter:become:echo {2..}'` to change the behavior.
-    * We use `{2..}` instead of `{2}` in case the directory name contains
+  so we use `--accept-nth 2..` to change the behavior.
+    * We use `2..` instead of `2` in case the directory name contains
       spaces.
 
 {{< figure src="/fzf/images/z.png" >}}
