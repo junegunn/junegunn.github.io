@@ -6,7 +6,7 @@ title: "fzf"
 url: /fzf
 ---
 
-{{< figure src="images/fzf.png" width="1200" height="680" >}}
+{{< figure src="images/fzf-color.png" >}}
 
 fzf is a general-purpose command-line fuzzy finder.
 
