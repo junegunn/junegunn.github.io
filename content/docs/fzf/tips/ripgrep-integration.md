@@ -266,8 +266,7 @@ so you can select multiple lines with `TAB` and `SHIFT-TAB`.
     * `-q {+f}` makes Vim start in quickfix mode using the error file `{+f}`
     * So what is `{+f}`? It's a placeholder expression of fzf for a temporary
       file containing the selected items. It's a combination of two flags, `+`
-      and `f`. See [the reference page](/fzf/reference/#preview) for more
-      information.
+      and `f`. See `man fzf` for more information.
 * We added three more bindings for convenience; `alt-a` and `alt-d`, to select
   and deselect all items, and `ctrl-/` to toggle the preview window.
 

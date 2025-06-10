@@ -212,8 +212,7 @@ ChromeFzf.send(method, type)
 
 {{< notice >}}
 * In both cases, the entries are sorted by the last visit time in descending
-  order. We use [`--scheme history`](/fzf/reference/#--schemescheme) to give
-  more weight to this ordering.
+  order. We use `--scheme history` to give more weight to this ordering.
 * If you don't want to keep fzf open after you press enter or CTRL-Y, change
   `execute-silent(...)+deselect-all` to `enter:become(...)`.
 {{< /notice >}}
