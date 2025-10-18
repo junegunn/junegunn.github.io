@@ -7,4 +7,7 @@ build: clean
 clean:
 	rm -rf public
 
-.PHONY: run build clean
+init:
+	git submodule update --init --recursive
+
+.PHONY: run build clean init
