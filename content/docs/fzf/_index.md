@@ -8,6 +8,18 @@ url: /fzf
 
 {{< figure src="images/fzf-color.png" >}}
 
+<table>
+<tr>
+<td align="center">
+{{< figure src="images/fzf-mugs.jpg" link="https://commitgoods.com/collections/fzf" >}}
+Show your love for fzf — T-shirts, mugs, and stickers now available!
+<br/><a href="https://commitgoods.com/collections/fzf">commitgoods.com/collections/fzf</a>
+<br/>
+
+</td>
+</tr>
+</table>
+
 fzf is a general-purpose command-line fuzzy finder.
 
 It's an interactive filter program for any kind of list; files, command
@@ -77,3 +89,4 @@ with all kinds of lists. And fzf was created to simplify this core process.
 See how it works in action:
 
 {{< figure src="images/fzf.gif" width=1200 height=800 >}}
+
