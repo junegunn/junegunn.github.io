@@ -102,9 +102,11 @@ It's a good start, but there's a lot to be desired.
 1. Add `--smart-case` to make the search case-insensitive by default, but
    case-sensitive if the query contains an uppercase letter.
 
+Note that you can also use `--sort=path` but ripgrep will be single-threaded
+
 ```sh
 fzf --disabled --ansi \
-    --bind 'change:reload:rg --column --color=always --smart-case {q}'
+    --bind 'change:reload:rg --sort=path --column --color=always --smart-case {q}'
 ```
 
 ### 4. Fix initial list
@@ -114,7 +116,7 @@ no input is fed to it and fzf starts its built-in directory walker. Let's fix
 it.
 
 ```sh {hl_lines=[1]}
-rg --column --color=always --smart-case '' |
+rg --sort=path --column --color=always --smart-case '' |
   fzf --disabled --ansi \
       --bind 'change:reload:rg --column --color=always --smart-case {q}'
 ```
