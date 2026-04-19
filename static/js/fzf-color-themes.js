@@ -459,7 +459,7 @@ function parseLabelPos(labelPos) {
   }
   return { offset: offset, edge: edge };
 }
-function drawLabel(r, c, w, h, text, color, labelPos) {
+function drawLabel(r, c, w, h, text, color, labelPos, bg) {
   var parsed = parseLabelPos(labelPos);
   var labelStr = ' ' + text + ' ';
   var labelR = (parsed.edge === 'bottom') ? r + h - 1 : r;
@@ -475,6 +475,12 @@ function drawLabel(r, c, w, h, text, color, labelPos) {
     }
   } else {
     pos = c + Math.floor((w - labelStr.length) / 2);
+  }
+  // Only overwrite bg if explicitly provided (e.g. list label over inline section)
+  if (bg !== undefined) {
+    for (var ci = pos; ci < pos + labelStr.length; ci++) {
+      if (ci >= 0 && ci < COLS && labelR >= 0 && labelR < ROWS) buf[labelR][ci].bg = bg;
+    }
   }
   setText(labelR, pos, labelStr, color);
 }
@@ -604,7 +610,7 @@ function renderFzf() {
   var footerBg = getCol('footer-bg', null, null);
   var footerBorderColor = getCol('footer-border', 'border', '#5f5f5f');
   var footerLabelColor = getCol('footer-label', 'label', null) || labelColor;
-  var listBg = getCol('list-bg', null, null);
+  var listBg = getCol('list-bg', 'bg', null);
   var listFg = getCol('list-fg', null, null);
   var listBorderColor = getCol('list-border', 'border', '#5f5f5f');
   var listLabelColor = getCol('list-label', 'label', null) || labelColor;
@@ -1000,7 +1006,7 @@ function renderFzf() {
           pointerColor, markerColor, gutterColor, gutterChar, ptrChar, mkChar,
           scrollbarColor, listFg, altBg, gapLineColor, gapLineStr, false, style === 'minimal');
         // Draw list label LAST so inline border coloring doesn't override it
-        drawLabel(t, l, w, h, 'List', listLabelColor, listLabelPos);
+        drawLabel(t, l, w, h, 'List', listLabelColor, listLabelPos, listBg);
       } else if (listIsLine) {
         drawHLine(t, l, r, 'rounded', listBorderColor);
         drawListItems(t + 1, l + 1, w - 1, h - 1, items, layout, highlightLine, gapOn,
