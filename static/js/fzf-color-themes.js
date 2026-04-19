@@ -1638,6 +1638,7 @@ function applyDeserializedState(obj) {
   if (obj.q !== undefined) document.getElementById('queryInput').value = obj.q;
   initDone = true;
   lastStyle = '';
+  applyColors();
   onDisplayChange();
 }
 function buildControls() {

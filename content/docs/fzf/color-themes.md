@@ -105,6 +105,6 @@ Note: some options shown here require <strong>fzf 0.72.0</strong> or above.
 <textarea class="fzf-export-box" id="exportBox" readonly rows="6"></textarea>
 </div>
 </div>
-<script src="/js/fzf-color-themes.js?v=14"></script>
+<script src="/js/fzf-color-themes.js?v=15"></script>
 <script>void(0);
 </script>
