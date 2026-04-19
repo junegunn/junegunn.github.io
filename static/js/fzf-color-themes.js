@@ -420,10 +420,11 @@ function drawHLine(r, c1, c2, borderStyle, color) {
 
 function drawInlineSep(r, c1, c2, outerBorderStyle, color, bg) {
   var b = BORDERS[outerBorderStyle] || BORDERS.rounded;
-  setCell(r, c1, b.tl2, color, bg);
-  setCell(r, c2 - 1, b.tr2, color, bg);
+  var effBg = bg || undefined;
+  setCell(r, c1, b.tl2, color, effBg);
+  setCell(r, c2 - 1, b.tr2, color, effBg);
   for (var c = c1 + 1; c < c2 - 1; c++) {
-    setCell(r, c, b.h, color, bg);
+    setCell(r, c, b.h, color, effBg);
   }
 }
 
@@ -952,8 +953,8 @@ function renderFzf() {
             // Color the top border of list box with header-border color, header bg behind it
             for (var ci = l; ci < l + w; ci++) { var cell = buf[t][ci]; if (cell) { cell.fg = headerBorderColor; if (headerBg) cell.bg = headerBg; } }
             // Left/right verticals adjacent to header content
-            setCell(listInnerTop, l, BORDERS[listBorder].v, headerBorderColor, headerBg);
-            setCell(listInnerTop, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), headerBorderColor, headerBg);
+            setCell(listInnerTop, l, BORDERS[listBorder].v, headerBorderColor, headerBg || undefined);
+            setCell(listInnerTop, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), headerBorderColor, headerBg || undefined);
             if (headerBg) fillBg(listInnerTop, listInnerLeft, listInnerLeft + listInnerW, headerBg);
             setText(listInnerTop, listInnerLeft + 2, 'CTRL-R Reload | CTRL-/ Preview', headerColor);
             drawInlineSep(listInnerTop + 1, l, l + w, listBorder, headerBorderColor, headerBg);
@@ -965,8 +966,8 @@ function renderFzf() {
             // Color the bottom border of list box with header-border color, header bg behind it
             for (var ci = l; ci < l + w; ci++) { var cell = buf[t + h - 1][ci]; if (cell) { cell.fg = headerBorderColor; if (headerBg) cell.bg = headerBg; } }
             // Left/right verticals adjacent to header content
-            setCell(hRow, l, BORDERS[listBorder].v, headerBorderColor, headerBg);
-            setCell(hRow, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), headerBorderColor, headerBg);
+            setCell(hRow, l, BORDERS[listBorder].v, headerBorderColor, headerBg || undefined);
+            setCell(hRow, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), headerBorderColor, headerBg || undefined);
             if (headerBg) fillBg(hRow, listInnerLeft, listInnerLeft + listInnerW, headerBg);
             drawInlineSep(hRow - 1, l, l + w, listBorder, headerBorderColor, headerBg);
             drawLabel(hRow - 1, l, w, 1, 'Header', headerLabelColor, headerLabelPos);
@@ -980,8 +981,8 @@ function renderFzf() {
             // Color the top border of list box with footer-border color, footer bg behind it
             for (var ci = l; ci < l + w; ci++) { var cell = buf[t][ci]; if (cell) { cell.fg = footerBorderColor; if (footerBg) cell.bg = footerBg; } }
             // Left/right verticals adjacent to footer content
-            setCell(listInnerTop, l, BORDERS[listBorder].v, footerBorderColor, footerBg);
-            setCell(listInnerTop, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), footerBorderColor, footerBg);
+            setCell(listInnerTop, l, BORDERS[listBorder].v, footerBorderColor, footerBg || undefined);
+            setCell(listInnerTop, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), footerBorderColor, footerBg || undefined);
             if (footerBg) fillBg(listInnerTop, listInnerLeft, listInnerLeft + listInnerW, footerBg);
             setText(listInnerTop, listInnerLeft + 2, '4 selected', footerColor);
             drawInlineSep(listInnerTop + 1, l, l + w, listBorder, footerBorderColor, footerBg);
@@ -992,8 +993,8 @@ function renderFzf() {
             var fRow = t + h - 2;
             // Color the bottom border with footer-border color, footer bg behind it
             for (var ci = l; ci < l + w; ci++) { var cell = buf[t + h - 1][ci]; if (cell) { cell.fg = footerBorderColor; if (footerBg) cell.bg = footerBg; } }
-            setCell(fRow, l, BORDERS[listBorder].v, footerBorderColor, footerBg);
-            setCell(fRow, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), footerBorderColor, footerBg);
+            setCell(fRow, l, BORDERS[listBorder].v, footerBorderColor, footerBg || undefined);
+            setCell(fRow, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), footerBorderColor, footerBg || undefined);
             if (footerBg) fillBg(fRow, listInnerLeft, listInnerLeft + listInnerW, footerBg);
             drawInlineSep(fRow - 1, l, l + w, listBorder, footerBorderColor, footerBg);
             drawLabel(fRow - 1, l, w, 1, 'Footer', footerLabelColor, footerLabelPos);
