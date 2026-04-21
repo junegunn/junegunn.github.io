@@ -388,6 +388,7 @@ var BORDERS = {
   sharp:     { tl: '\u250c', tr: '\u2510', bl: '\u2514', br: '\u2518', h: '\u2500', v: '\u2502', tl2: '\u251c', tr2: '\u2524' },
   bold:      { tl: '\u250f', tr: '\u2513', bl: '\u2517', br: '\u251b', h: '\u2501', v: '\u2503', tl2: '\u2520', tr2: '\u2528' },
   double:    { tl: '\u2554', tr: '\u2557', bl: '\u255a', br: '\u255d', h: '\u2550', v: '\u2551', tl2: '\u2560', tr2: '\u2563' },
+  dashed:    { tl: '\u256d', tr: '\u256e', bl: '\u2570', br: '\u256f', h: '\u2576', v: '\u2506', tl2: '\u251c', tr2: '\u2524' },
   block:     { tl: '\u259b', tr: '\u259c', bl: '\u2599', br: '\u259f', h: '\u2580', v: '\u258c', bh: '\u2584', rv: '\u2590', tl2: '\u258c', tr2: '\u2590' },
   thinblock: { tl: '\u{1FB7D}', tr: '\u{1FB7E}', bl: '\u{1FB7C}', br: '\u{1FB7F}', h: '\u2594', v: '\u258f', bh: '\u2581', rv: '\u2595', tl2: '\u258f', tr2: '\u2595' },
 };
@@ -418,13 +419,14 @@ function drawHLine(r, c1, c2, borderStyle, color) {
   }
 }
 
-function drawInlineSep(r, c1, c2, outerBorderStyle, color, bg) {
+function drawInlineSep(r, c1, c2, outerBorderStyle, color, bg, bottomFacing) {
   var b = BORDERS[outerBorderStyle] || BORDERS.rounded;
   var effBg = bg || undefined;
+  var hc = bottomFacing && b.bh ? b.bh : b.h;
   setCell(r, c1, b.tl2, color, effBg);
   setCell(r, c2 - 1, b.tr2, color, effBg);
   for (var c = c1 + 1; c < c2 - 1; c++) {
-    setCell(r, c, b.h, color, effBg);
+    setCell(r, c, hc, color, effBg);
   }
 }
 
@@ -797,7 +799,7 @@ function renderFzf() {
         var inlRight = boxLeft + boxW;
         var lineAtBottom = (layout === 'reverse');
         if (lineAtBottom) {
-          drawInlineSep(t + h - 1, inlLeft, inlRight, border, inputBorderColor);
+          drawInlineSep(t + h - 1, inlLeft, inlRight, border, inputBorderColor, undefined, true);
           drawLabel(t + h - 1, inlLeft, boxW, 1, 'Input', inputLabelColor, inputLabelPos);
           if (infoInInput) {
             var iiLeft = l + 3;
@@ -957,7 +959,7 @@ function renderFzf() {
             setCell(listInnerTop, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), headerBorderColor, headerBg || undefined);
             if (headerBg) fillBg(listInnerTop, listInnerLeft, listInnerLeft + listInnerW, headerBg);
             setText(listInnerTop, listInnerLeft + 2, 'CTRL-R Reload | CTRL-/ Preview', headerColor);
-            drawInlineSep(listInnerTop + 1, l, l + w, listBorder, headerBorderColor, headerBg);
+            drawInlineSep(listInnerTop + 1, l, l + w, listBorder, headerBorderColor, headerBg, true);
             drawLabel(listInnerTop + 1, l, w, 1, 'Header', headerLabelColor, headerLabelPos);
             listInnerTop += 2;
             listInnerH -= 2;
@@ -969,7 +971,7 @@ function renderFzf() {
             setCell(hRow, l, BORDERS[listBorder].v, headerBorderColor, headerBg || undefined);
             setCell(hRow, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), headerBorderColor, headerBg || undefined);
             if (headerBg) fillBg(hRow, listInnerLeft, listInnerLeft + listInnerW, headerBg);
-            drawInlineSep(hRow - 1, l, l + w, listBorder, headerBorderColor, headerBg);
+            drawInlineSep(hRow - 1, l, l + w, listBorder, headerBorderColor, headerBg, false);
             drawLabel(hRow - 1, l, w, 1, 'Header', headerLabelColor, headerLabelPos);
             setText(hRow, listInnerLeft + 2, 'CTRL-R Reload | CTRL-/ Preview', headerColor);
             listInnerH -= 2;
@@ -985,7 +987,7 @@ function renderFzf() {
             setCell(listInnerTop, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), footerBorderColor, footerBg || undefined);
             if (footerBg) fillBg(listInnerTop, listInnerLeft, listInnerLeft + listInnerW, footerBg);
             setText(listInnerTop, listInnerLeft + 2, '4 selected', footerColor);
-            drawInlineSep(listInnerTop + 1, l, l + w, listBorder, footerBorderColor, footerBg);
+            drawInlineSep(listInnerTop + 1, l, l + w, listBorder, footerBorderColor, footerBg, true);
             drawLabel(listInnerTop + 1, l, w, 1, 'Footer', footerLabelColor, footerLabelPos);
             listInnerTop += 2;
             listInnerH -= 2;
@@ -996,7 +998,7 @@ function renderFzf() {
             setCell(fRow, l, BORDERS[listBorder].v, footerBorderColor, footerBg || undefined);
             setCell(fRow, l + w - 1, (BORDERS[listBorder].rv || BORDERS[listBorder].v), footerBorderColor, footerBg || undefined);
             if (footerBg) fillBg(fRow, listInnerLeft, listInnerLeft + listInnerW, footerBg);
-            drawInlineSep(fRow - 1, l, l + w, listBorder, footerBorderColor, footerBg);
+            drawInlineSep(fRow - 1, l, l + w, listBorder, footerBorderColor, footerBg, false);
             drawLabel(fRow - 1, l, w, 1, 'Footer', footerLabelColor, footerLabelPos);
             setText(fRow, listInnerLeft + 2, '4 selected', footerColor);
             listInnerH -= 2;
@@ -1321,8 +1323,8 @@ function buildPresetSelect() {
     sel.appendChild(opt);
   });
 }
-var BORDER_STYLES = ['rounded','sharp','bold','double','block','thinblock','inline','line','none'];
-var STYLE_OPTIONS = ['default','minimal','full','full:sharp','full:bold','full:double','full:block','full:thinblock','full:line'];
+var BORDER_STYLES = ['rounded','sharp','bold','double','dashed','block','thinblock','inline','line','none'];
+var STYLE_OPTIONS = ['default','minimal','full','full:sharp','full:bold','full:double','full:dashed','full:block','full:thinblock','full:line'];
 var LAYOUT_OPTIONS = ['default','reverse','reverse-list'];
 var INFO_OPTIONS = ['default','right','inline','inline-right','hidden'];
 var DISPLAY_OPTS = [
@@ -1342,11 +1344,11 @@ var DISPLAY_OPTS = [
   { id: 'opt-gap', label: '--gap', type: 'check', value: false, tip: 'Insert a gap line between each item' },
   { id: 'opt-gap-line', label: '--gap-line', type: 'text', value: '', tip: 'String for the gap line (repeated). Default: dashed line.' },
   { id: 'opt-header-first', label: '--header-first', type: 'check', value: false, tip: 'Display the header above the prompt' },
-  { id: 'borderSelect', label: '--border', type: 'select', options: ['(no argument)','rounded','sharp','bold','double','block','thinblock','none'], value: '(no argument)', emptyLabel: '(not set)', tip: 'Draw a border around the fzf finder' },
+  { id: 'borderSelect', label: '--border', type: 'select', options: ['(no argument)','rounded','sharp','bold','double','dashed','block','thinblock','none'], value: '(no argument)', emptyLabel: '(not set)', tip: 'Draw a border around the fzf finder' },
   { id: 'opt-border-label-pos', label: '--border-label-pos', type: 'label-pos', value: '', tip: 'Position of the outer border label (N[:top|bottom])' },
-  { id: 'opt-input-border', label: '--input-border', type: 'select', options: ['(no argument)','rounded','sharp','bold','double','block','thinblock','line','none'], value: '', emptyLabel: '(not set)', tip: 'Draw a border around the input section' },
+  { id: 'opt-input-border', label: '--input-border', type: 'select', options: ['(no argument)','rounded','sharp','bold','double','dashed','block','thinblock','line','none'], value: '', emptyLabel: '(not set)', tip: 'Draw a border around the input section' },
   { id: 'opt-input-label-pos', label: '--input-label-pos', type: 'label-pos', value: '', tip: 'Position of the input border label' },
-  { id: 'opt-list-border', label: '--list-border', type: 'select', options: ['(no argument)','rounded','sharp','bold','double','block','thinblock','none'], value: '', emptyLabel: '(not set)', tip: 'Draw a border around the list section' },
+  { id: 'opt-list-border', label: '--list-border', type: 'select', options: ['(no argument)','rounded','sharp','bold','double','dashed','block','thinblock','none'], value: '', emptyLabel: '(not set)', tip: 'Draw a border around the list section' },
   { id: 'opt-list-label-pos', label: '--list-label-pos', type: 'label-pos', value: '', tip: 'Position of the list border label' },
   { id: 'opt-header-border', label: '--header-border', type: 'select', options: ['(no argument)'].concat(BORDER_STYLES), value: '', emptyLabel: '(not set)', tip: 'Draw a border around the header section' },
   { id: 'opt-header-label-pos', label: '--header-label-pos', type: 'label-pos', value: '', tip: 'Position of the header border label' },
