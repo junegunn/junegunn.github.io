@@ -38,8 +38,8 @@ makes fzf really versatile, because you can compose it with any other
 command-line tool that generates or consumes text lines.
 
 ```sh
-ls | fzf | wc
-find * | fzf | md5sum
+ls | fzf | xargs wc
+find * | fzf | xargs md5sum
 git ls-files | fzf | xargs git log
 ps -ef | sed 1d | fzf | awk '{print $2}' | xargs kill
 ```
