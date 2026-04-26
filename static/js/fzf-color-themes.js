@@ -89,7 +89,7 @@ var PRESETS = {
   },
   'Catppuccin Latte': {
     fg:'#4c4f69', bg:'#eff1f5', hl:'#d20f39', 'current-fg':'#4c4f69', 'current-bg':'#ccd0da', 'current-hl':'#d20f39',
-    info:'#8839ef', prompt:'#8839ef', pointer:'#dc8a78', marker:'#c4786a', spinner:'#dc8a78', header:'#d20f39',
+    info:'#8839ef', prompt:'#8839ef', pointer:'#e64553', marker:'#d20f39', spinner:'#e64553', header:'#d20f39',
     border:'#9ca0b0', gutter:'#ccd0da',
   },
   'Catppuccin Macchiato': {
@@ -114,8 +114,8 @@ var PRESETS = {
   },
   'Flexoki Dark': {
     fg:'#cecdc3', bg:'#100f0f', hl:'#d0a215', 'current-fg':'#cecdc3', 'current-bg':'#1c1b1a', 'current-hl':'#d0a215',
-    info:'#879a39', prompt:'#4385be', pointer:'#af3029', marker:'#d4635d', spinner:'#3aa99f', header:'#8b7ec8',
-    footer:'#8b7ec8', border:'#343331', label:'#575653', gutter:'#1c1b1a',
+    info:'#879a39', prompt:'#4385be', pointer:'#d14d41', marker:'#d4635d', spinner:'#3aa99f', header:'#8b7ec8',
+    footer:'#8b7ec8', border:'#343331', label:'#878580', gutter:'#1c1b1a',
   },
   'Flexoki Light': {
     fg:'#403e3c', bg:'#fffcf0', hl:'#ad8301', 'current-fg':'#403e3c', 'current-bg':'#f2f0e5', 'current-hl':'#ad8301',
@@ -124,12 +124,12 @@ var PRESETS = {
   },
   'Gruvbox Dark': {
     fg:'#ebdbb2', bg:'#282828', hl:'#fabd2f', 'current-fg':'#ebdbb2', 'current-bg':'#3c3836', 'current-hl':'#fabd2f',
-    info:'#83a598', prompt:'#bdae93', pointer:'#83a598', marker:'#a8c4b9', spinner:'#fabd2f', header:'#665c54',
+    info:'#83a598', prompt:'#bdae93', pointer:'#83a598', marker:'#a8c4b9', spinner:'#fabd2f', header:'#a89984',
     border:'#504945', gutter:'#3c3836',
   },
   'Gruvbox Light': {
-    fg:'#3c3836', bg:'#fbf1c7', hl:'#b57614', 'current-fg':'#3c3836', 'current-bg':'#ebdbb2', 'current-hl':'#b57614',
-    info:'#076678', prompt:'#665c54', pointer:'#076678', marker:'#3a8a98', spinner:'#b57614', header:'#928374',
+    fg:'#3c3836', bg:'#fbf1c7', hl:'#b57614', 'current-fg':'#3c3836', 'current-bg':'#ebdbb2', 'current-hl':'#9d0006',
+    info:'#076678', prompt:'#665c54', pointer:'#076678', marker:'#3a8a98', spinner:'#9d0006', header:'#928374',
     border:'#bdae93', gutter:'#ebdbb2',
   },
   'Iceberg Dark': {
@@ -139,8 +139,8 @@ var PRESETS = {
   },
   'Iceberg Light': {
     fg:'#33374c', bg:'#e8e9ec', hl:'#2d539e', 'current-fg':'#33374c', 'current-bg':'#dcdfe7', 'current-hl':'#2d539e',
-    info:'#8389a3', prompt:'#3f83a6', pointer:'#cc517a', marker:'#a8456a', spinner:'#7759b4', header:'#3f83a6',
-    footer:'#3f83a6', border:'#c9cdd7', label:'#8b90a0', gutter:'#dcdfe7',
+    info:'#576075', prompt:'#3f83a6', pointer:'#cc517a', marker:'#a8456a', spinner:'#7759b4', header:'#3f83a6',
+    footer:'#3f83a6', border:'#c9cdd7', label:'#65697b', gutter:'#dcdfe7',
   },
   'Jellybeans': {
     fg:'#e8e8d3', bg:'#151515', hl:'#fad07a', 'current-fg':'#e8e8d3', 'current-bg':'#333333', 'current-hl':'#ffb964',
@@ -156,7 +156,7 @@ var PRESETS = {
   'Melange Dark': {
     fg:'#ece1d7', bg:'#292522', hl:'#ebc06d', 'current-fg':'#ece1d7', 'current-bg':'#34302c', 'current-hl':'#ebc06d',
     info:'#86a3a3', prompt:'#b380b0', pointer:'#cf6f4e', marker:'#e09878', spinner:'#99d59d', header:'#86a3a3',
-    footer:'#86a3a3', border:'#4a4541', label:'#6a6561', gutter:'#34302c',
+    footer:'#86a3a3', border:'#4a4541', label:'#948b80', gutter:'#34302c',
   },
   'Melange Light': {
     fg:'#54433a', bg:'#f1f1f1', hl:'#9f6a25', 'current-fg':'#54433a', 'current-bg':'#e5e1db', 'current-hl':'#9f6a25',
@@ -195,18 +195,18 @@ var PRESETS = {
   },
   'Nord': {
     fg:'#D8DEE9', bg:'#2E3440', hl:'#A3BE8C', 'current-fg':'#D8DEE9', 'current-bg':'#434C5E', 'current-hl':'#A3BE8C',
-    info:'#4C566A', prompt:'#81A1C1', pointer:'#BF616A', marker:'#d08888', spinner:'#4C566A', header:'#4C566A',
+    info:'#88C0D0', prompt:'#81A1C1', pointer:'#BF616A', marker:'#d08888', spinner:'#EBCB8B', header:'#8FBCBB',
     border:'#4C566A', gutter:'#434C5E',
   },
   'One Dark': {
-    fg:'#abb2bf', bg:'#282c34', hl:'#c678dd', 'current-fg':'#ffffff', 'current-bg':'#4b5263', 'current-hl':'#d858fe',
-    info:'#98c379', prompt:'#61afef', pointer:'#be5046', marker:'#d87c73', spinner:'#61afef', header:'#61afef',
+    fg:'#abb2bf', bg:'#282c34', hl:'#c678dd', 'current-fg':'#ffffff', 'current-bg':'#4b5263', 'current-hl':'#e5c07b',
+    info:'#98c379', prompt:'#61afef', pointer:'#e06c75', marker:'#d87c73', spinner:'#61afef', header:'#61afef',
     border:'#5c6370', gutter:'#4b5263',
   },
   'Palenight': {
     fg:'#a6accd', bg:'#292d3e', hl:'#c792ea', 'current-fg':'#a6accd', 'current-bg':'#34324a', 'current-hl':'#c792ea',
     info:'#82aaff', prompt:'#c3e88d', pointer:'#f07178', marker:'#f59da2', spinner:'#89ddff', header:'#82aaff',
-    footer:'#82aaff', border:'#4e5579', label:'#676e95', gutter:'#34324a',
+    footer:'#82aaff', border:'#4e5579', label:'#959dc0', gutter:'#34324a',
   },
   'Paper Color': {
     fg:'#4d4d4c', bg:'#eeeeee', hl:'#d7005f', 'current-fg':'#4d4d4c', 'current-bg':'#e8e8e8', 'current-hl':'#d7005f',
@@ -220,19 +220,19 @@ var PRESETS = {
     'preview-fg':'#e0def4',
   },
   'Rose Pine Dawn': {
-    fg:'#797593', bg:'#faf4ed', hl:'#d7827e', 'current-fg':'#575279', 'current-bg':'#f2e9e1', 'current-hl':'#d7827e',
-    info:'#56949f', prompt:'#797593', pointer:'#907aa9', marker:'#7a6890', spinner:'#ea9d34', header:'#286983',
+    fg:'#797593', bg:'#faf4ed', hl:'#b4637a', 'current-fg':'#575279', 'current-bg':'#f2e9e1', 'current-hl':'#b4637a',
+    info:'#56949f', prompt:'#797593', pointer:'#907aa9', marker:'#7a6890', spinner:'#b4637a', header:'#286983',
     border:'#dfdad9', gutter:'#f2e9e1',
     'preview-fg':'#575279',
   },
   'Solarized Dark': {
     fg:'#839496', bg:'#002b36', hl:'#b58900', 'current-fg':'#eee8d5', 'current-bg':'#073642', 'current-hl':'#b58900',
-    info:'#2aa198', prompt:'#859900', pointer:'#cb4b16', marker:'#e08050', spinner:'#2aa198', header:'#586e75',
+    info:'#2aa198', prompt:'#859900', pointer:'#cb4b16', marker:'#e08050', spinner:'#2aa198', header:'#93a1a1',
     border:'#586e75', gutter:'#073642',
   },
   'Solarized Light': {
     fg:'#657b83', bg:'#fdf6e3', hl:'#268bd2', 'current-fg':'#586e75', 'current-bg':'#eee8d5', 'current-hl':'#268bd2',
-    info:'#268bd2', prompt:'#268bd2', pointer:'#cb4b16', marker:'#a84012', spinner:'#268bd2', header:'#93a1a1',
+    info:'#268bd2', prompt:'#268bd2', pointer:'#cb4b16', marker:'#a84012', spinner:'#268bd2', header:'#586e75',
     border:'#93a1a1', gutter:'#eee8d5',
   },
   'Srcery': {
@@ -242,12 +242,12 @@ var PRESETS = {
   },
   'Tokyo Night': {
     fg:'#c0caf5', bg:'#1a1b26', hl:'#2ac3de', 'current-fg':'#c0caf5', 'current-bg':'#283457', 'current-hl':'#2ac3de',
-    info:'#545c7e', prompt:'#2ac3de', pointer:'#ff007c', marker:'#ff5da0', spinner:'#ff007c', header:'#ff9e64',
+    info:'#7aa2f7', prompt:'#2ac3de', pointer:'#ff007c', marker:'#ff5da0', spinner:'#ff007c', header:'#ff9e64',
     border:'#27a1b9', separator:'#ff9e64', gutter:'#283457', query:'#c0caf5',
   },
   'Tokyo Night Day': {
-    fg:'#3760bf', bg:'#d0d5e3', hl:'#188092', 'current-fg':'#3760bf', 'current-bg':'#b7c1e3', 'current-hl':'#188092',
-    info:'#8990b3', prompt:'#188092', pointer:'#d20065', marker:'#a80050', spinner:'#d20065', header:'#b15c00',
+    fg:'#3760bf', bg:'#d0d5e3', hl:'#188092', 'current-fg':'#3760bf', 'current-bg':'#b7c1e3', 'current-hl':'#7847bd',
+    info:'#6172b0', prompt:'#188092', pointer:'#d20065', marker:'#a80050', spinner:'#d20065', header:'#b15c00',
     border:'#4094a3', separator:'#b15c00', gutter:'#b7c1e3', query:'#3760bf',
   },
   'Tomorrow Night': {
@@ -258,7 +258,7 @@ var PRESETS = {
   'Zenburn': {
     fg:'#dcdccc', bg:'#3f3f3f', hl:'#f0dfaf', 'current-fg':'#dcdccc', 'current-bg':'#4f4f4f', 'current-hl':'#f0dfaf',
     info:'#7f9f7f', prompt:'#8cd0d3', pointer:'#cc9393', marker:'#ddb0b0', spinner:'#7f9f7f', header:'#93e0e3',
-    footer:'#93e0e3', border:'#5f5f5f', label:'#6f6f6f', gutter:'#4f4f4f',
+    footer:'#93e0e3', border:'#5f5f5f', label:'#9f9f9f', gutter:'#4f4f4f',
   },
 };
 var ALL_ITEMS = [
