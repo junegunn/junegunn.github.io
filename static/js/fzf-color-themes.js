@@ -122,6 +122,18 @@ var PRESETS = {
     info:'#66800b', prompt:'#205ea6', pointer:'#af3029', marker:'#8a2822', spinner:'#24837b', header:'#5e409d',
     footer:'#5e409d', border:'#cecdc3', label:'#878580', gutter:'#f2f0e5',
   },
+  'GitHub Dark': {
+    fg:'#c9d1d9', bg:'#0d1117', hl:'#79c0ff', 'current-fg':'#c9d1d9', 'current-bg':'#161b22', 'current-hl':'#a5d6ff',
+    info:'#8b949e', prompt:'#58a6ff', pointer:'#f85149', marker:'#ff7b72', spinner:'#3fb950',
+    header:'#79c0ff', footer:'#8b949e',
+    border:'#30363d', label:'#8b949e', gutter:'#161b22',
+  },
+  'GitHub Light': {
+    fg:'#1f2328', bg:'#ffffff', hl:'#0969da', 'current-fg':'#1f2328', 'current-bg':'#f6f8fa', 'current-hl':'#0550ae',
+    info:'#656d76', prompt:'#0969da', pointer:'#cf222e', marker:'#a40e26', spinner:'#1a7f37',
+    header:'#0969da', footer:'#656d76',
+    border:'#d0d7de', label:'#656d76', gutter:'#f6f8fa',
+  },
   'Gruvbox Dark': {
     fg:'#ebdbb2', bg:'#282828', hl:'#fabd2f', 'current-fg':'#ebdbb2', 'current-bg':'#3c3836', 'current-hl':'#fabd2f',
     info:'#83a598', prompt:'#bdae93', pointer:'#83a598', marker:'#a8c4b9', spinner:'#fabd2f', header:'#a89984',
@@ -152,6 +164,12 @@ var PRESETS = {
     fg:'#DCD7BA', bg:'#1F1F28', hl:'#7E9CD8', 'current-fg':'#DCD7BA', 'current-bg':'#2A2A37', 'current-hl':'#7E9CD8',
     info:'#7AA89F', prompt:'#E6C384', pointer:'#957FB8', marker:'#b4a3d0', spinner:'#7AA89F', header:'#6A9589',
     border:'#54546D', gutter:'#2A2A37',
+  },
+  'Matrix': {
+    fg:'#00ff41', bg:'#000000', hl:'#39ff14', 'current-fg':'#00ff41', 'current-bg':'#001a00', 'current-hl':'#39ff14',
+    info:'#008f11', prompt:'#39ff14', pointer:'#00ff41', marker:'#80ff80', spinner:'#39ff14',
+    header:'#00cc33', footer:'#00cc33',
+    border:'#003b00', label:'#008f11', separator:'#003b00', gutter:'#001a00',
   },
   'Melange Dark': {
     fg:'#ece1d7', bg:'#292522', hl:'#ebc06d', 'current-fg':'#ece1d7', 'current-bg':'#34302c', 'current-hl':'#ebc06d',
