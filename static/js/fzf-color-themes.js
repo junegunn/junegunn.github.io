@@ -255,6 +255,12 @@ var PRESETS = {
     info:'#969896', prompt:'#b5bd68', pointer:'#81a2be', marker:'#a4bdd4', spinner:'#8abeb7', header:'#81a2be',
     border:'#4a4e54', gutter:'#373b41',
   },
+  'Vaporwave': {
+    fg:'#f8d7ff', bg:'#1a0633', hl:'#01cdfe', 'current-fg':'#fffb96', 'current-bg':'#2d1259', 'current-hl':'#05ffa1',
+    info:'#b967ff', prompt:'#ff71ce', pointer:'#ff1493', marker:'#ff6ec7', spinner:'#05ffa1',
+    header:'#01cdfe', footer:'#b967ff',
+    border:'#ff71ce', label:'#fffb96', separator:'#b967ff', scrollbar:'#ff71ce', gutter:'#2d1259',
+  },
   'Zenburn': {
     fg:'#dcdccc', bg:'#3f3f3f', hl:'#f0dfaf', 'current-fg':'#dcdccc', 'current-bg':'#4f4f4f', 'current-hl':'#f0dfaf',
     info:'#7f9f7f', prompt:'#8cd0d3', pointer:'#cc9393', marker:'#ddb0b0', spinner:'#7f9f7f', header:'#93e0e3',
