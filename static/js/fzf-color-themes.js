@@ -1150,10 +1150,13 @@ function drawListItems(top, left, w, h, items, layout, highlightLine, gapOn,
       var bgEnd = Math.min(textStart + textLen, left + w - 1);
       fillBg(r, left, bgEnd, curBg);
     } else if (lineBg) {
-      var bgStart = textStart;
       var textLen = item.text.length;
-      var bgEnd = Math.min(textStart + textLen, left + w - 1);
-      fillBg(r, bgStart, bgEnd, lineBg);
+      if (highlightLine) {
+        fillBg(r, textStart, left + w - 1, lineBg);
+      } else {
+        var bgEnd = Math.min(textStart + textLen, left + w - 1);
+        fillBg(r, textStart, bgEnd, lineBg);
+      }
     }
 
     var text = item.text;
