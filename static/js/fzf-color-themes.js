@@ -163,6 +163,12 @@ var PRESETS = {
     info:'#4f7272', prompt:'#824e7e', pointer:'#b65c3e', marker:'#9a5035', spinner:'#4e7548', header:'#4f7272',
     footer:'#4f7272', border:'#c9c2b7', label:'#90897e', gutter:'#e5e1db',
   },
+  'Miami Vice': {
+    fg:'#5b3b6e', bg:'#fff0f5', hl:'#0095a8', 'current-fg':'#5b3b6e', 'current-bg':'#ffe0ed', 'current-hl':'#008c9e',
+    info:'#7c5cb0', prompt:'#ff5c8a', pointer:'#ff3d7f', marker:'#ff85a9', spinner:'#00b4a0',
+    header:'#0095a8', footer:'#7c5cb0',
+    border:'#ff85b3', label:'#7c5cb0', separator:'#ffb3c6', gutter:'#ffe0ed',
+  },
   'Modus Operandi': {
     fg:'#000000', bg:'#ffffff', hl:'#0031a9', 'current-fg':'#000000', 'current-bg':'#e0e0e0', 'current-hl':'#0031a9',
     info:'#00663f', prompt:'#5317ac', pointer:'#a60000', marker:'#802020', spinner:'#005e8b', header:'#005e8b',
