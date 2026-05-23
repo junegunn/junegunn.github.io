@@ -85,7 +85,7 @@ bookToc: false
 <button class="fzf-btn-copy" id="btnCopy" title="Copy to clipboard">Copy</button>
 </div>
 <div class="fzf-version-note">
-Note: some options shown here require <strong>fzf 0.72.0</strong> or above.
+Note: some options shown here require <strong>fzf 0.73.0</strong> or above.
 </div>
 <div class="fzf-main">
 <div class="fzf-preview-wrap" style="background:#262626">
@@ -105,6 +105,6 @@ Note: some options shown here require <strong>fzf 0.72.0</strong> or above.
 <textarea class="fzf-export-box" id="exportBox" readonly rows="6"></textarea>
 </div>
 </div>
-<script src="/js/fzf-color-themes.js?v=19"></script>
+<script src="/js/fzf-color-themes.js?v=20"></script>
 <script>void(0);
 </script>

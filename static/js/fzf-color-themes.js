@@ -697,17 +697,49 @@ function renderFzf() {
     drawLabel(boxTop, boxLeft, boxW, boxH, 'Demo', labelColor, borderLabelPos);
   }
 
-  var pvWidth = Math.floor(innerW / 2);
-  var leftWidth = innerW - pvWidth;
-  var pvLeft = innerLeft + leftWidth;
-  var pvRight = innerRight;
-  var leftRight = pvLeft;
+  var pvPos = document.getElementById('opt-preview-window').value || 'right';
+  var pvIsNext = (pvPos === 'next');
+  var areaTop = innerTop, areaLeft = innerLeft, areaW = innerW, areaH = innerH;
+  var pvTop, pvLeft, pvWidth, pvHeight;
+  if (pvPos === 'left') {
+    pvWidth = Math.floor(innerW / 2);
+    pvHeight = innerH;
+    pvTop = innerTop;
+    pvLeft = innerLeft;
+    areaLeft = innerLeft + pvWidth;
+    areaW = innerW - pvWidth;
+  } else if (pvPos === 'up') {
+    pvWidth = innerW;
+    pvHeight = Math.floor(innerH / 2);
+    pvTop = innerTop;
+    pvLeft = innerLeft;
+    areaTop = innerTop + pvHeight;
+    areaH = innerH - pvHeight;
+  } else if (pvPos === 'down') {
+    pvWidth = innerW;
+    pvHeight = Math.floor(innerH / 2);
+    pvTop = innerTop + (innerH - pvHeight);
+    pvLeft = innerLeft;
+    areaH = innerH - pvHeight;
+  } else if (pvIsNext) {
+    // Preview rectangle is computed after section layout
+    pvWidth = 0; pvHeight = 0; pvTop = 0; pvLeft = 0;
+  } else {
+    // right (default)
+    pvWidth = Math.floor(innerW / 2);
+    pvHeight = innerH;
+    pvTop = innerTop;
+    pvLeft = innerLeft + (innerW - pvWidth);
+    areaW = innerW - pvWidth;
+  }
+  var pvRight = pvLeft + pvWidth;
+  var leftRight = areaLeft + areaW;
 
   var isFull = (style === 'full');
   var fullPad = isFull ? 1 : 0;
   var fullGapV = 0;
 
-  var contentLeft = innerLeft + fullPad;
+  var contentLeft = areaLeft + fullPad;
   var contentRight = leftRight;
   var contentW = contentRight - contentLeft;
 
@@ -783,19 +815,51 @@ function renderFzf() {
     }
   }
 
+  if (pvIsNext) {
+    var inputIdx = -1;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].type === 'input') { inputIdx = i; break; }
+    }
+    if (inputIdx >= 0) {
+      var insertAt;
+      if (layout === 'reverse') {
+        insertAt = inputIdx + 1;
+        if (insertAt < sections.length && sections[insertAt].type === 'info') insertAt++;
+      } else {
+        insertAt = inputIdx;
+        if (insertAt > 0 && sections[insertAt - 1].type === 'info') insertAt--;
+      }
+      var pvNextH = Math.floor(areaH / 2);
+      if (pvNextH < 2) pvNextH = 2;
+      sections.splice(insertAt, 0, { type: 'preview', h: pvNextH });
+    }
+  }
+
   var fixedH = 0;
   sections.forEach(function(s) { fixedH += s.h; });
   var gapCount = isFull ? sections.length - 1 : 0;
   fixedH += gapCount * fullGapV;
-  var listH = innerH - fixedH;
+  var listH = areaH - fixedH;
   if (listH < 1) listH = 1;
   sections.forEach(function(s) { if (s.type === 'list') s.h = listH; });
 
-  var curRow = innerTop;
+  var curRow = areaTop;
   sections.forEach(function(s) {
     s.top = curRow;
     curRow += s.h + (isFull ? fullGapV : 0);
   });
+
+  if (pvIsNext) {
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].type === 'preview') {
+        pvTop = sections[i].top;
+        pvLeft = contentLeft;
+        pvWidth = contentRight - contentLeft;
+        pvHeight = sections[i].h;
+        break;
+      }
+    }
+  }
 
   sections.forEach(function(s) {
     var t = s.top;
@@ -1055,7 +1119,7 @@ function renderFzf() {
     }
   });
 
-  drawPreviewPane(innerTop, pvLeft, pvWidth, innerH, isFull, border, pvBorderStyle,
+  drawPreviewPane(pvTop, pvLeft, pvWidth, pvHeight, isFull, border, pvBorderStyle,
     pvBorderColor, pvLabelColor, pvFg, pvBg, pvScrollbarColor, previewLabelPos, infoColor);
 
 
@@ -1387,6 +1451,7 @@ var DISPLAY_OPTS = [
   { id: 'opt-header-label-pos', label: '--header-label-pos', type: 'label-pos', value: '', tip: 'Position of the header border label' },
   { id: 'opt-footer-border', label: '--footer-border', type: 'select', options: ['(no argument)'].concat(BORDER_STYLES), value: '', emptyLabel: '(not set)', tip: 'Draw a border around the footer section' },
   { id: 'opt-footer-label-pos', label: '--footer-label-pos', type: 'label-pos', value: '', tip: 'Position of the footer border label' },
+  { id: 'opt-preview-window', label: '--preview-window', type: 'select', options: ['left','up','down','next'], value: '', emptyLabel: 'right (default)', tip: 'Position of the preview window. "next" places it adjacent to the input section (fzf 0.73.0+).' },
   { id: 'opt-preview-border', label: '--preview-border', type: 'select', options: ['(no argument)'].concat(BORDER_STYLES), value: '', emptyLabel: '(not set)', tip: 'Draw a border around the preview window' },
   { id: 'opt-preview-label-pos', label: '--preview-label-pos', type: 'label-pos', value: '', tip: 'Position of the preview border label' },
 ];
@@ -2074,6 +2139,8 @@ function updateExport() {
     var v = document.getElementById('opt-' + f).value.trim();
     if (v) lines.push('--' + f + '=' + v);
   });
+  var pvWinVal = document.getElementById('opt-preview-window').value;
+  if (pvWinVal) lines.push('--preview-window=' + pvWinVal);
   if (parts.length > 0) {
     var colorStr = parts.join(',');
     if (colorStr.length > 60) {
