@@ -1438,6 +1438,16 @@ e.g.
 fzf --fish | source
 ```
 
+#### `--nushell`
+
+Print script to set up Nushell shell integration
+
+e.g.
+
+```bash
+fzf --nushell | save -f ~/.config/nushell/autoload/_fzf_integration.nu
+```
+
 ### OTHERS
 
 #### `--no-mouse`
@@ -1543,6 +1553,7 @@ fzf exports the following environment variables to its child processes.
 | `FZF_MATCH_COUNT` | Number of matched items |
 | `FZF_SELECT_COUNT` | Number of selected items |
 | `FZF_POS` | Vertical position of the cursor in the list starting from 1 |
+| `FZF_CURRENT_ITEM` | Text of the current item (unset if the list is empty) |
 | `FZF_WRAP` | The line wrapping mode (char, word) when enabled |
 | `FZF_QUERY` | Current query string |
 | `FZF_INPUT_STATE` | Current input state (enabled, disabled, hidden) |
