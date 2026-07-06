@@ -211,7 +211,7 @@ Enable processing of ANSI color codes
 Synchronous search for multi-staged filtering. If specified, fzf will launch
 the finder only after the input stream is complete and the initial filtering
 and the associated actions (bound to any of `start`, `load`,
-`result`, or `focus`) are complete.
+`result`, `result-final`, or `focus`) are complete.
 
 e.g.
 
@@ -427,9 +427,24 @@ Ignored when `--height` is not specified or set as an absolute value.
 
 #### `--popup[=[center|top|bottom|left|right][,SIZE[%]][,SIZE[%]][,border-native]]`
 
-Start fzf in a tmux popup or in a Zellij floating pane (default
-**center,50%**). Requires tmux 3.3+ or Zellij 0.44+. This option is ignored if you
+Start fzf in a tmux or Zellij floating pane (default **center,50%**).
+Requires tmux 3.3+ or Zellij 0.44+. This option is ignored if you
 are not running fzf inside tmux or Zellij. `--tmux` is an alias for this option.
+
+On tmux 3.7 or above and on Zellij, the floating pane is not modal; you can
+switch to other panes and windows while fzf is running, and move and resize
+the pane with the mouse. The native border of the pane is the handle for
+moving and resizing it, so it is used by default and `border-native` is
+implied. On tmux, `--border-label` is set as the title of the pane,
+and is displayed on the border if `pane-border-status` is enabled in
+tmux (`--border-label-pos` is ignored).
+
+fzf draws its own border instead when a border style is explicitly specified
+with `--border`, so that it is the only border shown. `none` and
+`line` are treated as no border. Give `border-native` to keep the
+native border nonetheless. On tmux, the fzf-drawn border is shown in a modal
+popup, since the native border of a tmux floating pane cannot be removed;
+this is also the case on tmux versions below 3.7.
 
 e.g.
 
@@ -1579,6 +1594,12 @@ fzf exports the following environment variables to its child processes.
 | `FZF_PREVIEW_COLUMNS` | Number of columns in the preview window |
 | `FZF_RAW` | Only in raw mode. 1 if the current item matches, 0 otherwise |
 
+`FZF_CURRENT_ITEM`
+is omitted when the item contains a NUL byte, because exec(2) cannot pass it.
+It is also omitted when the item is larger than 64 KB, so that a huge item
+cannot overflow the environment size limit and break preview and other child
+commands.
+
 ## EXTENDED SEARCH MODE
 
 Unless specified otherwise, fzf will start in "extended-search mode". In this
@@ -1816,6 +1837,21 @@ e.g.
 fzf --sync --bind 'result:transform:[[ -z {q} ]] && echo "pos(2)"'
 ```
 
+`result-final`
+
+Same as `result`, but suppressed while the input stream is still open. Use
+this when you want a one-shot action per query instead of one per intermediate
+snapshot during loading.
+
+e.g.
+
+```bash
+# 'result' fires per intermediate snapshot (header keeps updating during load);
+# 'result-final' fires once after the stream closes (footer shows the final count)
+(seq 100; sleep 1; seq 100) | fzf --query 1 \
+  --bind 'result:transform-header(echo result: $FZF_MATCH_COUNT),result-final:transform-footer(echo final: $FZF_MATCH_COUNT)'
+```
+
 `change`
 
 Triggered whenever the query string is changed
@@ -1979,7 +2015,7 @@ ACTION:                      DEFAULT BINDINGS (NOTES):
   backward-kill-subword
   backward-kill-word           alt-bs
   backward-subword
-  backward-word                alt-b   shift-left
+  backward-word                alt-b   shift-left  alt-left
   become(...)                  (replace fzf process with the specified command; see below for the details)
   beginning-of-line            ctrl-a  home
   bell                         (ring the terminal bell)
@@ -2026,7 +2062,7 @@ ACTION:                      DEFAULT BINDINGS (NOTES):
   first                        (move to the first match; same as pos(1))
   forward-char                 ctrl-f  right
   forward-subword
-  forward-word                 alt-f   shift-right
+  forward-word                 alt-f   shift-right alt-right
   ignore
   jump                         (EasyMotion-like 2-keystroke movement)
   kill-line
@@ -2113,6 +2149,7 @@ ACTION:                      DEFAULT BINDINGS (NOTES):
   unix-line-discard            ctrl-u
   unix-word-rubout             ctrl-w
   untrack-current              (stop tracking the current item; no-op if global tracking is enabled)
+  wait                         (block action execution until search completes)
   up                           ctrl-k  up
   up-match                     ctrl-p  alt-up (move to the match above the cursor)
   up-selected                  (move to the selected item above the cursor)
@@ -2288,6 +2325,50 @@ command runs. To avoid this, each **transform\*** action has a corresponding
 chain multiple transform actions where later ones depend on earlier results,
 prefer using the `bg` variant. To cancel currently running background
 transform processes, use `bg-cancel` action.
+
+### WAITING FOR SEARCH COMPLETION
+
+The `wait` action blocks the execution of subsequent actions until the
+current search completes. This is useful when chaining query-changing actions
+with motion actions like `best` or `first`, ensuring that the motion
+action operates on the complete search results rather than stale data.
+
+e.g.
+
+```bash
+fzf --bind 'start:change-query(foo)+wait+best'
+```
+
+In this example, `change-query(foo)` starts an asynchronous search for
+the new query, `wait` blocks until the search completes, and `best`
+then moves the cursor to the best match in the complete result set.
+
+The initial loading of the input is also considered a search in progress, so
+**start:wait** can be used to block until the input is fully loaded and
+searched.
+
+While waiting, user input is ignored, except for keys bound to `abort` or
+`cancel` (`ctrl-c`, `ctrl-g`, `ctrl-q`, and `esc` by
+default), which cancel the wait and discard the pending actions instead of
+performing their usual role. The remaining actions of such a binding still run,
+so a binding like **esc:cancel+first** is possible.
+
+Asynchronous **bg-transform-\*** actions are not affected; their results are
+applied as soon as they arrive, even while waiting. For the same reason,
+`wait` does not pair with them: in
+`bg-transform-query(...)+wait`, the background command completes only
+after `wait` has already been evaluated, so the search its result
+eventually triggers is not waited for. Use the synchronous
+`transform-query(...)` variant instead when chaining with `wait`.
+
+If the search takes long enough, fzf indicates that it is waiting by dimming the
+input, hiding the cursor, and showing `(..)` on the info line. This visual
+feedback is debounced so that quick searches do not cause flickering.
+
+Note that when searches are triggered in rapid succession (e.g. via
+`--listen`), `wait` may unblock on the completion of an earlier
+search. Also, if the input source never completes, `wait` will block until
+cancelled.
 
 ### PREVIEW BINDING
 
