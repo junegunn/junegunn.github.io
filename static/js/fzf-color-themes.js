@@ -776,6 +776,30 @@ function renderFzf() {
   var headerBordered = (optHeaderBorder && optHeaderBorder !== 'none' && optHeaderBorder !== 'line' && optHeaderBorder !== 'inline');
   var footerBordered = (optFooterBorder && optFooterBorder !== 'none' && optFooterBorder !== 'line' && optFooterBorder !== 'inline');
 
+  // fzf hides the default separator when a border line already separates the
+  // input section from the list section (explicit --separator always shows)
+  if (separatorStr && !separatorRaw) {
+    var sepSuppressed;
+    if (optInputBorder && optInputBorder !== 'none') {
+      // Every selectable input border draws a line on the side facing the
+      // list section ('line' resolves to that side)
+      sepSuppressed = true;
+    } else if (pvIsNext) {
+      // Preview window at 'next' position sits right next to the input
+      // section; its 'line' border resolves to the side facing the list
+      sepSuppressed = ['none', 'line', 'inline'].indexOf(optPreviewBorder) < 0;
+    } else if (headerFirst || headerIsInline) {
+      // The input section sits right next to the list section; an inline
+      // header is drawn inside the list border
+      sepSuppressed = listBordered;
+    } else {
+      // Header section is next to the input section; a 'line' header border
+      // hugs the list side
+      sepSuppressed = headerBordered;
+    }
+    if (sepSuppressed) separatorStr = '';
+  }
+
   var sections = [];
 
   var hasInfoLine = (info === 'default' || info === 'right');
