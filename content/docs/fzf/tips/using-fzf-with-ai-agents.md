@@ -11,10 +11,11 @@ params:
 With AI coding agents such as Claude Code and Codex, you spend more of your
 time typing into the prompt of the agent than on the command line of your
 shell. You still need to type in file paths, commit hashes, and branch names,
-but the key bindings of the [shell integration](/fzf/shell-integration/) are
-no longer there to help you. <kbd>CTRL-T</kbd> and <kbd>CTRL-R</kbd> are
-handled by the shell, and the shell is not the program reading your keys
-anymore.
+but the fzf-powered key bindings for your shell, such as
+[<kbd>CTRL-T</kbd>](/fzf/shell-integration/) for files and
+[<kbd>CTRL-G</kbd> <kbd>CTRL-H</kbd>](/fzf/examples/git/) for commit hashes,
+are no longer there to help you. They are handled by the shell, and the shell
+is not the program reading your keys anymore.
 
 ## tmux to the rescue
 
