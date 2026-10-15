@@ -35,7 +35,7 @@ There are two plugins built this way.
 The floating pane requires tmux 3.7 or later. On older versions, fzf starts in
 a popup instead.
 
-<video src="https://github.com/user-attachments/assets/9acbe848-dac6-41e4-950e-7ed2797a5222" controls="controls" style="max-width: 100%"></video>
+<video src="https://github.com/user-attachments/assets/df090db7-d06e-4151-aafb-029260f44fc0" controls="controls" style="max-width: 100%"></video>
 
 [complete]: https://github.com/junegunn/tmux-fzf-complete
 [fzf-git]: https://github.com/junegunn/fzf-git.sh
