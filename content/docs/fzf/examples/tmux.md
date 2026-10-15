@@ -26,6 +26,9 @@ directories, URLs, paths, or sentences on the screen. A sentence is put back
 together from the rows the program wrapped it into, with its indentation
 removed, which is what makes the output of an AI agent usable.
 
+See [Using fzf with AI agents](/fzf/tips/using-fzf-with-ai-agents/) for how
+to use it with an AI agent.
+
 ### [junegunn/tmux-fzf-url](https://github.com/junegunn/tmux-fzf-url)
 
 The one I enjoy the most is

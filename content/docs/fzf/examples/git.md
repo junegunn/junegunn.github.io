@@ -54,3 +54,7 @@ without having to run additional commands.
 The bindings are available in
 [fzf-git.sh](https://github.com/junegunn/fzf-git.sh) respository. Thank me
 later.
+
+The repository also provides the same bindings for tmux, which work in any
+pane, including one running an AI agent. See [Using fzf with AI
+agents](/fzf/tips/using-fzf-with-ai-agents/).
