@@ -149,7 +149,13 @@ The keys are the same as the shell bindings, with <kbd>PREFIX</kbd>
 * <kbd>PREFIX</kbd> <kbd>g</kbd> <kbd>l</kbd> for ref**l**ogs
 * <kbd>PREFIX</kbd> <kbd>g</kbd> <kbd>w</kbd> for **W**orktrees
 * <kbd>PREFIX</kbd> <kbd>g</kbd> <kbd>e</kbd> for **E**ach ref (`git for-each-ref`)
+* <kbd>PREFIX</kbd> <kbd>g</kbd> <kbd>p</kbd> for GitHub **P**ull requests
+  (only if [pr.fzf][pr] is in `$PATH`)
+
+[pr]: https://github.com/junegunn/everything.fzf/blob/main/pr.fzf
 
 So you can ask the agent to "review the changes in" a commit, and fill in the
 hash with <kbd>PREFIX</kbd> <kbd>g</kbd> <kbd>h</kbd> after looking at the
-diff of each commit in the preview window.
+diff of each commit in the preview window. Likewise, <kbd>PREFIX</kbd>
+<kbd>g</kbd> <kbd>p</kbd> fills in the numbers of the pull requests you want
+the agent to review.
