@@ -37,6 +37,27 @@ a popup instead.
 
 <video src="https://github.com/user-attachments/assets/df090db7-d06e-4151-aafb-029260f44fc0" controls="controls" style="max-width: 100%"></video>
 
+What happens in the screencast (the responses of Claude Code are sped up):
+
+- 0:05: Type "Summarize changes since " into the prompt of Claude Code.
+- 0:09: <kbd>PREFIX</kbd> <kbd>g</kbd> <kbd>h</kbd> to list commit hashes. Press
+  <kbd>CTRL-/</kbd> to change the layout of the preview window, and look for
+  the commit to start from.
+- 0:16: Select the commit. Its hash is inserted into the prompt.
+- 0:25: <kbd>PREFIX</kbd> <kbd>CTRL-T</kbd> to start tmux-fzf-complete.
+  <kbd>CTRL-T</kbd> to go through files, directories, and paths, to the
+  sentences on the screen.
+- 0:28: Type "mouse" to find a sentence in the response, and select it.
+- 0:31: Type "Elaborate" below the sentence, and send it.
+- 0:35: While Claude Code is working, <kbd>PREFIX</kbd> <kbd>CTRL-T</kbd> again,
+  and <kbd>CTRL-T</kbd> to go to the paths on the screen.
+- 0:40: <kbd>CTRL-O</kbd> to open `src/tui/light.go` in Vim, in the floating
+  pane.
+- 0:42: <kbd>PREFIX</kbd> <kbd>z</kbd> to zoom the pane, and search for "mouse"
+  in the file.
+- 0:46: <kbd>PREFIX</kbd> <kbd>z</kbd> to unzoom. Quit Vim to go back to fzf,
+  and close it.
+
 [complete]: https://github.com/junegunn/tmux-fzf-complete
 [fzf-git]: https://github.com/junegunn/fzf-git.sh
 
