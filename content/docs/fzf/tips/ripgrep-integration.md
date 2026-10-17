@@ -102,6 +102,8 @@ It's a good start, but there's a lot to be desired.
 1. Add `--smart-case` to make the search case-insensitive by default, but
    case-sensitive if the query contains an uppercase letter.
 
+Note that you can also use `--sort=path` but ripgrep will be single-threaded
+
 ```sh
 fzf --disabled --ansi \
     --bind 'change:reload:rg --column --color=always --smart-case {q}'
