@@ -48,6 +48,11 @@
 #     Plain-text occurrences of --flag-like tokens are wrapped in backticks
 #     so Goldmark's typographer cannot convert `--` to an en-dash.
 #
+#     Inline code spans naming an option (`--exact`, `-e`, `--tiebreak=index`)
+#     link to the option's heading. `--no-X` falls back to `--X` and vice
+#     versa. Skipped: headings, code blocks, table key cells, and spans
+#     inside the option's own section.
+#
 # FRONTMATTER
 #     The generated file starts with Hugo frontmatter (weight: 6, title:
 #     "Reference") followed by a one-line note pointing readers at
@@ -370,6 +375,81 @@ def try_collect_table(lines, start, n)
     i += 1 if i < n && lines[i].strip == '.br'
   end
   rows.length >= 2 ? [i, rows] : [start, nil]
+end
+
+OPTION_NAME = /[-+]{1,2}[A-Za-z0-9][A-Za-z0-9-]*/
+
+# Hugo's default (GitHub-style) heading ID for a Markdown heading line.
+def heading_anchor(text, seen)
+  plain = text.sub(/\A#+\s+/, '').delete('`*')
+  id = plain.downcase.chars.map do |c|
+    if c.match?(/[\p{L}\p{N}_-]/) then c
+    elsif c == ' ' then '-'
+    else ''
+    end
+  end.join
+  n = seen[id]
+  seen[id] = (n || 0) + 1
+  n ? "#{id}-#{n}" : id
+end
+
+def in_fence_flags(lines)
+  in_code = false
+  lines.map do |l|
+    fence = l.start_with?('```')
+    in_code = !in_code if fence
+    fence || in_code
+  end
+end
+
+# Map each option name in an option heading to the heading's anchor.
+def collect_option_anchors(lines)
+  anchors = {}
+  seen = {}
+  in_fence_flags(lines).zip(lines).each do |code, l|
+    next if code || !l.start_with?('#')
+
+    id = heading_anchor(l, seen)
+    sig = l[/\A#+ `([^`]+)`\z/, 1] or next
+    sig.split(/,?\s+/).each do |tok|
+      name = tok[/\A#{OPTION_NAME}/] or next
+      anchors[name] ||= id
+    end
+  end
+  anchors
+end
+
+def option_target(anchors, name)
+  anchors[name] ||
+    (name.start_with?('--no-') && anchors["--#{name[5..]}"]) ||
+    (name.start_with?('--') && anchors["--no-#{name[2..]}"]) ||
+    nil
+end
+
+def link_options(lines)
+  anchors = collect_option_anchors(lines)
+  seen = {}
+  current = nil
+  linker = lambda do |text|
+    text.gsub(/(?<!\[)`([^`]+)`/) do |span|
+      m = Regexp.last_match(1).match(/\A(#{OPTION_NAME})(=\S*)?\z/)
+      target = m && option_target(anchors, m[1])
+      target && target != current ? "[#{span}](##{target})" : span
+    end
+  end
+
+  in_fence_flags(lines).zip(lines).map do |code, l|
+    if code
+      l
+    elsif l.start_with?('#')
+      current = heading_anchor(l, seen)
+      l
+    elsif (key = l[/\A\|(?:\\.|[^|\\])*\|/])
+      key + linker.call(l[key.length..])
+    else
+      linker.call(l)
+    end
+  end
 end
 
 class Generator
@@ -710,7 +790,7 @@ raw = File.read(man_path)
 raw = raw.gsub(/^\.ig\n.*?^\.\.\n/m, '')
 lines = raw.split("\n", -1)
 
-final = Generator.new(lines).run
+final = link_options(Generator.new(lines).run)
 
 File.open(OUTPUT, 'w') do |f|
   f.write(FRONTMATTER)

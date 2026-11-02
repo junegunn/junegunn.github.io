@@ -69,7 +69,7 @@ Generic scoring scheme designed to work well with any type of input.
 
 Additional bonus point is only given to the characters after path separator.
 You might want to choose this scheme over `default` if you have many files
-with spaces in their paths. This also sets `--tiebreak=pathname,length`,
+with spaces in their paths. This also sets [`--tiebreak=pathname,length`](#--tiebreakcri),
 to prioritize matches occurring in the tail element of a file path.
 
 `history`
@@ -77,7 +77,7 @@ to prioritize matches occurring in the tail element of a file path.
 Scoring scheme well suited for command history or any input where chronological
 ordering is important. No additional bonus points are given so that we give
 more weight to the chronological ordering. This also sets
-`--tiebreak=index`.
+[`--tiebreak=index`](#--tiebreakcri).
 
 fzf chooses `path` scheme when the input is a TTY device, where fzf would
 start its built-in walker or run `$FZF_DEFAULT_COMMAND`, and there is no
@@ -97,8 +97,8 @@ Fuzzy matching algorithm (default: v2)
 
 Comma-separated list of field index expressions for limiting search scope.
 See **FIELD INDEX EXPRESSION** for the details. When you use this option with
-`--with-nth`, the field index expressions are calculated against the
-transformed lines (unlike in `--preview` where fields are extracted from
+[`--with-nth`](#--with-nthn-or-template), the field index expressions are calculated against the
+transformed lines (unlike in [`--preview`](#--previewcommand) where fields are extracted from
 the original lines) because fzf doesn't allow searching against the hidden
 fields.
 
@@ -151,7 +151,7 @@ Do not sort the result
 
 #### `-d, --delimiter=STR`
 
-Field delimiter regex for `--nth`, `--with-nth`, and field index
+Field delimiter regex for [`--nth`](#-n---nthn), [`--with-nth`](#--with-nthn-or-template), and field index
 expressions (default: AWK-style)
 
 #### `--tail=NUM`
@@ -419,11 +419,11 @@ Adaptive height has the following limitations:
 
 #### `--min-height=HEIGHT[+]`
 
-Minimum height when `--height` is given as a percentage.
+Minimum height when [`--height`](#--height-height) is given as a percentage.
 Add **+** to automatically increase the value according to the other
 layout options so that the specified number of items are visible in the list
 section (default: **10+**).
-Ignored when `--height` is not specified or set as an absolute value.
+Ignored when [`--height`](#--height-height) is not specified or set as an absolute value.
 
 #### `--popup[=[center|top|bottom|left|right][,SIZE[%]][,SIZE[%]][,border-native]]`
 
@@ -435,12 +435,12 @@ On tmux 3.7 or above and on Zellij, the floating pane is not modal; you can
 switch to other panes and windows while fzf is running, and move and resize
 the pane with the mouse. The native border of the pane is the handle for
 moving and resizing it, so it is used by default and `border-native` is
-implied. On tmux, `--border-label` is set as the title of the pane,
+implied. On tmux, [`--border-label`](#--border-labellabel) is set as the title of the pane,
 and is displayed on the border if `pane-border-status` is enabled in
-tmux (`--border-label-pos` is ignored).
+tmux ([`--border-label-pos`](#--border-label-posntopbottom) is ignored).
 
 fzf draws its own border instead when a border style is explicitly specified
-with `--border`, so that it is the only border shown. `none` and
+with [`--border`](#--borderstyle), so that it is the only border shown. `none` and
 `line` are treated as no border. Give `border-native` to keep the
 native border nonetheless. On tmux, the fzf-drawn border is shown in a modal
 popup, since the native border of a tmux floating pane cannot be removed;
@@ -479,7 +479,7 @@ Choose the layout (default: default)
 
 #### `--reverse`
 
-A synonym for `--layout=reverse`
+A synonym for [`--layout=reverse`](#--layoutlayout)
 
 #### `--margin=MARGIN`
 
@@ -505,7 +505,7 @@ fzf --margin 1,5%
 #### `--padding=PADDING`
 
 Comma-separated expression for padding inside the border. Padding is
-distinguishable from margin only when `--border` option is used.  
+distinguishable from margin only when [`--border`](#--borderstyle) option is used.  
 
 e.g.
 
@@ -544,16 +544,16 @@ Draw border around the finder
 | `none` |  |
 
 If you use a terminal emulator where each box-drawing character takes
-2 columns, try setting `--ambidouble`. If the border is still not properly
-rendered, set `--no-unicode`.
+2 columns, try setting [`--ambidouble`](#--ambidouble). If the border is still not properly
+rendered, set [`--no-unicode`](#--no-unicode).
 
-`line` style draws a single separator line at the top when `--height`
+`line` style draws a single separator line at the top when [`--height`](#--height-height)
 is used.
 
 #### `--border-label[=LABEL]`
 
 Label to print on the horizontal border line. Should be used with one of the
-following `--border` options.
+following [`--border`](#--borderstyle) options.
 
 - `rounded`
 - `sharp`
@@ -617,11 +617,11 @@ at arbitrary character positions. `--wrap-word` is a synonym for
 #### `--wrap-sign=INDICATOR`
 
 Indicator for wrapped lines. The default is `↳ ` or `> ` depending on
-`--no-unicode`.
+[`--no-unicode`](#--no-unicode).
 
 #### `--no-multi-line`
 
-Disable multi-line display of items when using `--read0`
+Disable multi-line display of items when using [`--read0`](#--read0)
 
 #### `--raw`
 
@@ -631,13 +631,13 @@ Enable raw mode where non-matching items are also displayed in a dimmed color.
 
 Make fzf track the current selection when the result list is updated.
 This can be useful when browsing logs using fzf with sorting disabled. It is
-not recommended to use this option with `--tac` as the resulting behavior
+not recommended to use this option with [`--tac`](#--tac) as the resulting behavior
 can be confusing.
 
-When `--id-nth` is also set, fzf enables field-based tracking across
-`reload`s. See `--id-nth` for details.
+When [`--id-nth`](#--id-nthn) is also set, fzf enables field-based tracking across
+`reload`s. See [`--id-nth`](#--id-nthn) for details.
 
-Without `--id-nth`, `--track` uses index-based tracking that
+Without [`--id-nth`](#--id-nthn), `--track` uses index-based tracking that
 does not persist across reloads.
 
 e.g.
@@ -658,7 +658,7 @@ Define item identity fields for cross-reload operations. When set, fzf
 uses the specified fields to identify items across `reload` and
 `reload-sync`.
 
-With `--track`, fzf extracts the tracking key from the current item
+With [`--track`](#--track), fzf extracts the tracking key from the current item
 using the nth expression and searches for a matching item in the reloaded list.
 While searching, the UI is blocked (query input and cursor movement are
 disabled, and the prompt is dimmed). With `reload`, the blocked state
@@ -669,7 +669,7 @@ the blocked state persists until the entire stream is complete. Press
 The info line shows **+T\*** (or **+t\*** for one-off tracking) while
 the search is in progress.
 
-With `--multi`, selected items are preserved across `reload-sync`
+With [`--multi`](#-m---multimax), selected items are preserved across `reload-sync`
 by matching their identity fields in the reloaded list.
 
 e.g.
@@ -697,7 +697,7 @@ Render empty lines between each item
 #### `--gap-line[=STR]`
 
 The given string will be repeated to draw a horizontal line on each gap
-(default: `┈` or `-` depending on `--no-unicode`).
+(default: `┈` or `-` depending on [`--no-unicode`](#--no-unicode)).
 
 #### `--freeze-left=N`
 
@@ -710,7 +710,7 @@ Number of fields to freeze on the right.
 #### `--keep-right`
 
 Keep the right end of the line visible when it's too long. Effective only when
-the query string is empty. Use `--freeze-right=1` instead if you want
+the query string is empty. Use [`--freeze-right=1`](#--freeze-rightn) instead if you want
 the last field to be always visible even with a non-empty query.
 
 #### `--scroll-off=LINES`
@@ -734,24 +734,24 @@ Label characters for `jump` mode.
 
 #### `--gutter=CHAR`
 
-Character used for the gutter column (default: `▌` unless `--no-unicode` is given)
+Character used for the gutter column (default: `▌` unless [`--no-unicode`](#--no-unicode) is given)
 
 #### `--gutter-raw=CHAR`
 
-Character used for the gutter column in raw mode (default: `▖` unless `--no-unicode` is given)
+Character used for the gutter column in raw mode (default: `▖` unless [`--no-unicode`](#--no-unicode) is given)
 
 #### `--pointer=STR`
 
-Pointer to the current line (default: `▌` or `>` depending on `--no-unicode`)
+Pointer to the current line (default: `▌` or `>` depending on [`--no-unicode`](#--no-unicode))
 
 #### `--marker=STR`
 
-Multi-select marker (default: `┃` or `>` depending on `--no-unicode`)
+Multi-select marker (default: `┃` or `>` depending on [`--no-unicode`](#--no-unicode))
 
 #### `--marker-multi-line=STR`
 
 Multi-select marker for multi-line entries. 3 elements for top, middle, and bottom.
-(default: `╻┃╹` or `.|'` depending on `--no-unicode`)
+(default: `╻┃╹` or `.|'` depending on [`--no-unicode`](#--no-unicode))
 
 #### `--ellipsis=STR`
 
@@ -764,12 +764,12 @@ Number of spaces for a tab character (default: 8)
 #### `--scrollbar=CHAR1[CHAR2]`
 
 Use the given character to render scrollbar. (default: `│` or `:` depending on
-`--no-unicode`). The optional `CHAR2` is used to render scrollbar of
+[`--no-unicode`](#--no-unicode)). The optional `CHAR2` is used to render scrollbar of
 the preview window.
 
 #### `--no-scrollbar`
 
-Do not display scrollbar. A synonym for `--scrollbar=''`
+Do not display scrollbar. A synonym for [`--scrollbar=''`](#--scrollbarchar1char2)
 
 #### `--list-border[=STYLE]`
 
@@ -828,19 +828,19 @@ fzf --info-command='printf "\x1b[33;1m$FZF_POS\x1b[m/$FZF_INFO 💛"'
 
 #### `--no-info`
 
-A synonym for `--info=hidden`
+A synonym for [`--info=hidden`](#--infostyle)
 
 #### `--separator=STR`
 
 The given string will be repeated to form the horizontal separator on the info
-line (default: `─` or `-` depending on `--no-unicode`).
+line (default: `─` or `-` depending on [`--no-unicode`](#--no-unicode)).
 
 ANSI color codes are supported.
 
 #### `--no-separator`
 
 Do not display horizontal separator on the info line. A synonym for
-`--separator=''`
+[`--separator=''`](#--separatorstr)
 
 #### `--ghost=TEXT`
 
@@ -977,14 +977,14 @@ fzf --preview='fzf-preview.sh {}'
 
 #### `--preview-border[=STYLE]`
 
-Short for `--preview-window=border-STYLE`. `line` style draws
+Short for [`--preview-window=border-STYLE`](#--preview-windowpositionsizeborder-stylenowrapwrap-wordnofollownocyclenoinfonohiddenscrolloffsetsdenomheader_linesdefaultsize_thresholdalternative_layout). `line` style draws
 a single separator line between the preview window and the rest of the
 interface.
 
 #### `--preview-label[=LABEL]`
 
 Label to print on the horizontal border line of the preview window.
-Should be used with one of the following `--preview-window` options.
+Should be used with one of the following [`--preview-window`](#--preview-windowpositionsizeborder-stylenowrapwrap-wordnofollownocyclenoinfonohiddenscrolloffsetsdenomheader_linesdefaultsize_thresholdalternative_layout) options.
 
 - `border-rounded` (default on non-Windows platforms)
 - `border-sharp` (default on Windows)
@@ -1000,7 +1000,7 @@ Should be used with one of the following `--preview-window` options.
 #### `--preview-wrap-sign=INDICATOR`
 
 Indicator for wrapped lines in the preview window. If not set, the value of
-`--wrap-sign` is used.
+[`--wrap-sign`](#--wrap-signindicator) is used.
 
 #### `--preview-label-pos[=N[:top|bottom]]`
 
@@ -1027,7 +1027,7 @@ Determines the layout of the preview window.
 
 * `next` places the preview window adjacent to the input section, on
 the list side: above the input in the default layout, below the input
-in `--layout=reverse`.
+in [`--layout=reverse`](#--layoutlayout).
 
 * If the argument contains **:hidden**, the preview window will be hidden by
 default until `toggle-preview` action is triggered.
@@ -1058,7 +1058,7 @@ done'
 `noinfo`.
 
 * To change the style of the border of the preview window, specify one of
-the options for `--border` with `border-` prefix.
+the options for [`--border`](#--borderstyle) with `border-` prefix.
 e.g.
 
 ```bash
@@ -1135,34 +1135,34 @@ fzf --preview 'cat {}' --preview-window 'right,border-left,<30(up,30%,border-bot
 #### `--header=STR`
 
 The given string will be printed as the sticky header. The lines are displayed
-in the given order from top to bottom regardless of `--layout` option, and
-are not affected by `--with-nth`. ANSI color codes are processed even when
-`--ansi` is not set.
+in the given order from top to bottom regardless of [`--layout`](#--layoutlayout) option, and
+are not affected by [`--with-nth`](#--with-nthn-or-template). ANSI color codes are processed even when
+[`--ansi`](#--ansi) is not set.
 
 #### `--header-lines=N`
 
 The first N lines of the input are treated as the sticky header. When
-`--with-nth` is set, the lines are transformed just like the other
+[`--with-nth`](#--with-nthn-or-template) is set, the lines are transformed just like the other
 lines that follow.
 
 #### `--header-first`
 
 Print header before the prompt line. When both normal header and header lines
-(`--header-lines`) are present, this applies only to the normal header.
+([`--header-lines`](#--header-linesn)) are present, this applies only to the normal header.
 
 #### `--header-border[=STYLE]`
 
 Draw border around the header section. `line` style draws a single
 separator line between the header window and the list section. `inline`
 style embeds the header inside the list border frame, joined to the list
-section by a horizontal separator; it requires a `--list-border`
+section by a horizontal separator; it requires a [`--list-border`](#--list-borderstyle)
 shape that has both top and bottom segments (rounded / sharp / bold /
 double / dashed / block / thinblock / horizontal) and falls back to `line`
 otherwise. When the list border also has side segments, the separator
 joins them with T-junctions; `horizontal` has no side borders, so the
 separator is drawn without T-junction endpoints. Takes precedence over
-`--header-first` (the section stays inside the list frame), and
-when `--header-lines` is also set `--header-lines-border`
+[`--header-first`](#--header-first) (the section stays inside the list frame), and
+when [`--header-lines`](#--header-linesn) is also set [`--header-lines-border`](#--header-lines-borderstyle)
 must also be `inline`.
 
 #### `--header-label[=LABEL]`
@@ -1175,12 +1175,12 @@ Position of the header label
 
 #### `--header-lines-border[=STYLE]`
 
-Display header from `--header-lines` with a separate border. Pass
+Display header from [`--header-lines`](#--header-linesn) with a separate border. Pass
 `none` to still separate the header lines but without a border. To combine
 two headers, use `--no-header-lines-border`. `line` style draws
 a single separator line between the header lines and the list section.
 `inline` style embeds the header lines inside the list border frame
-with a horizontal separator; it requires a `--list-border` shape
+with a horizontal separator; it requires a [`--list-border`](#--list-borderstyle) shape
 that has both top and bottom segments, falls back to `line`
 otherwise.
 
@@ -1189,16 +1189,16 @@ otherwise.
 #### `--footer=STR`
 
 The given string will be printed as the sticky footer. The lines are displayed
-in the given order from top to bottom regardless of `--layout` option, and
-are not affected by `--with-nth`. ANSI color codes are processed even when
-`--ansi` is not set.
+in the given order from top to bottom regardless of [`--layout`](#--layoutlayout) option, and
+are not affected by [`--with-nth`](#--with-nthn-or-template). ANSI color codes are processed even when
+[`--ansi`](#--ansi) is not set.
 
 #### `--footer-border[=STYLE]`
 
 Draw border around the footer section. `line` style draws a single
 separator line between the footer and the list section. `inline` style
 embeds the footer inside the list border frame with a horizontal separator;
-it requires a `--list-border` shape that has both top and bottom
+it requires a [`--list-border`](#--list-borderstyle) shape that has both top and bottom
 segments and falls back to `line` otherwise.
 
 #### `--footer-label[=LABEL]`
@@ -1217,17 +1217,17 @@ Start the finder with the given query
 
 #### `-1, --select-1`
 
-If there is only one match for the initial query (`--query`), do not start
+If there is only one match for the initial query ([`--query`](#-q---querystr)), do not start
 interactive finder and automatically select the only match
 
 #### `-0, --exit-0`
 
-If there is no match for the initial query (`--query`), do not start
+If there is no match for the initial query ([`--query`](#-q---querystr)), do not start
 interactive finder and exit immediately
 
 #### `-f, --filter=STR`
 
-Filter mode. Do not start interactive finder. When used with `--no-sort`,
+Filter mode. Do not start interactive finder. When used with [`--no-sort`](#s---no-sort),
 fzf becomes a fuzzy-version of grep.
 
 #### `--print-query`
@@ -1239,7 +1239,7 @@ Print query as the first line
 Comma-separated list of keys that can be used to complete fzf in addition to
 the default enter key. When this option is set, fzf will print the name of the
 key pressed as the first line of its output (or as the second line if
-`--print-query` is also used). The line will be empty if fzf is completed
+[`--print-query`](#--print-query) is also used). The line will be empty if fzf is completed
 with the default enter key. If `--expect` option is specified multiple
 times, fzf will expect the union of the keys. `--no-expect` will clear the
 list.
@@ -1250,7 +1250,7 @@ e.g.
 fzf --expect=ctrl-v,ctrl-t,alt-s --expect=f1,f2,~,@
 ```
 
-This option is not compatible with `--bind` on the same key and will take
+This option is not compatible with [`--bind`](#--bindbindings) on the same key and will take
 precedence over it. To combine the two, use `print` action.
 
 e.g.
@@ -1371,8 +1371,8 @@ Number of matcher threads to use. The default value is
 
 #### `--bench=DURATION`
 
-Repeatedly run `--filter` for the given duration and print timing
-statistics. Must be used with `--filter`.
+Repeatedly run [`--filter`](#-f---filterstr) for the given duration and print timing
+statistics. Must be used with [`--filter`](#-f---filterstr).
 
 e.g.
 
@@ -1521,7 +1521,7 @@ export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
 
 ### `FZF_API_KEY`
 
-Can be used to require an API key when using `--listen` option. If not set,
+Can be used to require an API key when using [`--listen`](#--listensocket_pathaddrport---listen-unsafeaddrport) option. If not set,
 no authentication will be required by the server. You can set this value if
 you need to protect against DNS rebinding and privilege escalation attacks.
 
@@ -1539,7 +1539,7 @@ you need to protect against DNS rebinding and privilege escalation attacks.
 ## FIELD INDEX EXPRESSION
 
 A field index expression can be a non-zero integer or a range expression
-([BEGIN]..[END]). `--nth` and `--with-nth` take a comma-separated list
+([BEGIN]..[END]). [`--nth`](#-n---nthn) and [`--with-nth`](#--with-nthn-or-template) take a comma-separated list
 of field index expressions.
 
 ### Examples
@@ -1572,8 +1572,8 @@ fzf exports the following environment variables to its child processes.
 | `FZF_WRAP` | The line wrapping mode (char, word) when enabled |
 | `FZF_QUERY` | Current query string |
 | `FZF_INPUT_STATE` | Current input state (enabled, disabled, hidden) |
-| `FZF_NTH` | Current `--nth` option |
-| `FZF_WITH_NTH` | Current `--with-nth` option |
+| `FZF_NTH` | Current [`--nth`](#-n---nthn) option |
+| `FZF_WITH_NTH` | Current [`--with-nth`](#--with-nthn-or-template) option |
 | `FZF_PROMPT` | Prompt string |
 | `FZF_GHOST` | Ghost string |
 | `FZF_POINTER` | Pointer string |
@@ -1586,8 +1586,8 @@ fzf exports the following environment variables to its child processes.
 | `FZF_KEY` | The name of the last key pressed |
 | `FZF_IDLE_TIME` | Whole seconds since the last user activity |
 | `FZF_IDLE_TIME_MS` | Milliseconds since the last user activity |
-| `FZF_PORT` | Port number when `--listen` option is used |
-| `FZF_SOCK` | Unix socket path when `--listen` option is used |
+| `FZF_PORT` | Port number when [`--listen`](#--listensocket_pathaddrport---listen-unsafeaddrport) option is used |
+| `FZF_SOCK` | Unix socket path when [`--listen`](#--listensocket_pathaddrport---listen-unsafeaddrport) option is used |
 | `FZF_PREVIEW_TOP` | Top position of the preview window |
 | `FZF_PREVIEW_LEFT` | Left position of the preview window |
 | `FZF_PREVIEW_LINES` | Number of lines in the preview window |
@@ -1643,8 +1643,8 @@ term from the result. In this case, fzf performs exact match by default.
 ### Exact-match by default
 
 If you don't prefer fuzzy matching and do not wish to "quote" (prefixing with
-**'**) every word, start fzf with `-e` or `--exact` option. Note that
-when `--exact` is set, **'**-prefix "unquotes" the term.
+**'**) every word, start fzf with [`-e`](#-e---exact) or [`--exact`](#-e---exact) option. Note that
+when [`--exact`](#-e---exact) is set, **'**-prefix "unquotes" the term.
 
 ### OR operator
 
@@ -1660,11 +1660,11 @@ e.g.
 
 ## KEY/EVENT BINDINGS
 
-`--bind` option allows you to bind **a key** or **an event** to one or
+[`--bind`](#--bindbindings) option allows you to bind **a key** or **an event** to one or
 more `actions`. You can use it to customize key bindings or implement
 dynamic behaviors.
 
-`--bind` takes a comma-separated list of binding expressions. Each binding
+[`--bind`](#--bindbindings) takes a comma-separated list of binding expressions. Each binding
 expression is **KEY:ACTION** or **EVENT:ACTION**. You can bind actions to
 multiple keys and events by writing comma-separated list of keys and events
 before the colon. e.g. **KEY1,KEY2,EVENT1,EVENT2:ACTION**.
@@ -1794,7 +1794,7 @@ Note that some terminal emulators may not support *ctrl-\** bindings.
 `start`
 
 Triggered only once when fzf finder starts. Since fzf consumes the input stream
-asynchronously, the input list is not available unless you use `--sync`.
+asynchronously, the input list is not available unless you use [`--sync`](#--sync).
 
 e.g.
 
@@ -1889,7 +1889,7 @@ Triggered when the multi-selection has changed.
 `one`
 
 Triggered when there's only one match. **one:accept** binding is comparable
-to `--select-1` option, but the difference is that `--select-1` is only
+to [`--select-1`](#-1---select-1) option, but the difference is that [`--select-1`](#-1---select-1) is only
 effective before the interactive finder starts but `one` event is triggered
 by the interactive finder.
 
@@ -1903,7 +1903,7 @@ seq 10 | fzf --bind one:accept
 `zero`
 
 Triggered when there's no match. **zero:abort** binding is comparable to
-`--exit-0` option, but the difference is that `--exit-0` is only
+[`--exit-0`](#-0---exit-0) option, but the difference is that [`--exit-0`](#-0---exit-0) is only
 effective before the interactive finder starts but `zero` event is
 triggered by the interactive finder.
 
@@ -2221,7 +2221,7 @@ binding `enter` key to `less` command like follows.
 fzf --bind "enter:execute(less {})"
 ```
 
-You can use the same placeholder expressions as in `--preview`.
+You can use the same placeholder expressions as in [`--preview`](#--previewcommand).
 
 fzf switches to the alternate screen when executing a command. However, if the
 command is expected to complete quickly, and you are not interested in its
@@ -2291,7 +2291,7 @@ fzf --bind 'focus:transform-header:file --brief {}'
 
 `transform(...)` action runs an external command that should print a series
 of actions to be performed. The output should be in the same format as the
-payload of HTTP POST request to the `--listen` server.
+payload of HTTP POST request to the [`--listen`](#--listensocket_pathaddrport---listen-unsafeaddrport) server.
 
 e.g.
 
@@ -2366,14 +2366,14 @@ input, hiding the cursor, and showing `(..)` on the info line. This visual
 feedback is debounced so that quick searches do not cause flickering.
 
 Note that when searches are triggered in rapid succession (e.g. via
-`--listen`), `wait` may unblock on the completion of an earlier
+[`--listen`](#--listensocket_pathaddrport---listen-unsafeaddrport)), `wait` may unblock on the completion of an earlier
 search. Also, if the input source never completes, `wait` will block until
 cancelled.
 
 ### PREVIEW BINDING
 
 With `preview(...)` action, you can specify multiple different preview
-commands in addition to the default preview command given by `--preview`
+commands in addition to the default preview command given by [`--preview`](#--previewcommand)
 option.
 
 e.g.
@@ -2393,7 +2393,7 @@ fzf --bind '?:preview:cat {}' --preview-window hidden
 ### CHANGE PREVIEW WINDOW ATTRIBUTES
 
 `change-preview-window` action can be used to change the properties of the
-preview window. Unlike the `--preview-window` option, you can specify
+preview window. Unlike the [`--preview-window`](#--preview-windowpositionsizeborder-stylenowrapwrap-wordnofollownocyclenoinfonohiddenscrolloffsetsdenomheader_linesdefaultsize_thresholdalternative_layout) option, you can specify
 multiple sets of options separated by `|` characters.
 
 e.g.
