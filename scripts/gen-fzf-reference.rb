@@ -75,6 +75,7 @@ FRONTMATTER = <<~TEXT
   ---
   weight: 6
   title: "Reference"
+  linkPreview: true
   ---
 
   # Reference
