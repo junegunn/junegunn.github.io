@@ -416,7 +416,9 @@ seq 5 | fzf --height=~-1
 
 Adaptive height has the following limitations:  
 * Cannot be used with top/bottom margin and padding given in percent size  
-* It will not find the right size when there are multi-line items
+* It will not find the right size when there are multi-line items  
+* fzf cannot start until the input ends or exceeds the height, so a stream
+that stays below it will delay the first render
 
 #### `--min-height=HEIGHT[+]`
 
@@ -436,9 +438,13 @@ On tmux 3.7 or above and on Zellij, the floating pane is not modal; you can
 switch to other panes and windows while fzf is running, and move and resize
 the pane with the mouse. The native border of the pane is the handle for
 moving and resizing it, so it is used by default and `border-native` is
-implied. On tmux, [`--border-label`](#--border-labellabel) is set as the title of the pane,
-and is displayed on the border if `pane-border-status` is enabled in
-tmux ([`--border-label-pos`](#--border-label-posntopbottom) is ignored).
+implied. [`--border-label`](#--border-labellabel) is displayed on the native border, and
+`change-border-label` and `transform-border-label` update it
+([`--border-label-pos`](#--border-label-posntopbottom) is ignored). On tmux, fzf holds the label in
+the **@fzf-border-label** option of the pane and sets its
+`pane-border-format` to read it back, so the label is displayed if
+`pane-border-status` is enabled in tmux. The title of the pane is left
+alone. On Zellij, the label is the name of the pane.
 
 fzf draws its own border instead when a border style is explicitly specified
 with [`--border`](#--borderstyle), so that it is the only border shown. `none` and
@@ -835,6 +841,10 @@ A synonym for [`--info=hidden`](#--infostyle)
 
 The given string will be repeated to form the horizontal separator on the info
 line (default: `─` or `-` depending on [`--no-unicode`](#--no-unicode)).
+
+Unless explicitly specified, the separator is not displayed if the input
+section is already visually separated from the list section by a border line
+(e.g. [`--input-border`](#--input-borderstyle) or [`--header-border`](#--header-borderstyle)).
 
 ANSI color codes are supported.
 
@@ -1867,7 +1877,10 @@ fzf --bind change:first
 `focus`
 
 Triggered when the focus changes due to a vertical cursor movement or a search
-result update.
+result update. After a reload, the focused item is considered new unless
+[`--id-nth`](#--id-nthn) is set and the item has the same key as the previously
+focused item. Because of this, binding `reload` to this event can cause an
+infinite loop.
 
 e.g.
 
@@ -2028,12 +2041,13 @@ ACTION:                      DEFAULT BINDINGS (NOTES):
   change-header(...)           (change header to the given string; doesn't affect --header-lines)
   change-header-lines(N)       (change the number of --header-lines)
   change-header-label(...)     (change --header-label to the given string)
+  change-info-command(...)     (change --info-command option)
   change-input-label(...)      (change --input-label to the given string)
   change-list-label(...)       (change --list-label to the given string)
   change-multi                 (enable multi-select mode with no limit)
   change-multi(...)            (enable multi-select mode with a limit or disable it with 0)
-  change-nth(...)              (change --nth option; rotate through the multiple options separated by '|')
-  change-with-nth(...)         (change --with-nth option; rotate through the multiple options separated by '|')
+  change-nth(...)              (change --nth option; see CHANGE NTH AND WITH-NTH)
+  change-with-nth(...)         (change --with-nth option; see CHANGE NTH AND WITH-NTH)
   change-pointer(...)          (change --pointer option)
   change-preview(...)          (change --preview option)
   change-preview-label(...)    (change --preview-label to the given string)
@@ -2136,10 +2150,11 @@ ACTION:                      DEFAULT BINDINGS (NOTES):
   transform-header(...)        (transform header using an external command)
   transform-header-lines(...)  (transform the number of --header-lines using an external command)
   transform-header-label(...)  (transform header label using an external command)
+  transform-info-command(...)  (transform --info-command using an external command)
   transform-input-label(...)   (transform input label using an external command)
   transform-list-label(...)    (transform list label using an external command)
-  transform-nth(...)           (transform nth using an external command)
-  transform-with-nth(...)      (transform with-nth using an external command)
+  transform-nth(...)           (transform nth using an external command; see CHANGE NTH AND WITH-NTH)
+  transform-with-nth(...)      (transform with-nth using an external command; see CHANGE NTH AND WITH-NTH)
   transform-pointer(...)       (transform pointer using an external command)
   transform-preview-label(...) (transform preview label using an external command)
   transform-prompt(...)        (transform prompt string using an external command)
@@ -2408,6 +2423,31 @@ fzf --preview 'cat {}' --preview-window 'right,40%,border-left' --bind 'ctrl-/:c
 
 # This is equivalent to toggle-preview action
 fzf --preview 'cat {}' --bind 'ctrl-/:change-preview-window(hidden|)'
+```
+
+### CHANGE NTH AND WITH-NTH
+
+`change-nth` and `change-with-nth` actions change [`--nth`](#-n---nthn) and
+[`--with-nth`](#--with-nthn-or-template) options. You can specify multiple values separated by `|`
+characters. Each time the action runs, fzf applies the value after the current
+one in the list, skipping the values equal to the current one.
+
+`transform-nth` and `transform-with-nth` actions (and their
+`bg-` variants) take the output of the command as a single value. The
+following rules apply to all of these actions.
+
+- An empty value restores the default given by the option
+- **..** selects all fields
+- A non-empty invalid value is ignored
+
+e.g.
+
+```bash
+# All fields, then fields 1, 2, and 3
+fzf --bind 'ctrl-/:change-nth(..|1|2|3)'
+
+# An empty string in the list is interpreted as the default
+fzf --nth 1 --bind 'ctrl-/:change-nth(2|)'
 ```
 
 ## AUTHOR

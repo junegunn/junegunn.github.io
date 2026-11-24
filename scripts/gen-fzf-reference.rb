@@ -41,6 +41,8 @@
 #                              output line is a Markdown bullet ("- ..."),
 #                              in which case they fold into the bullet as
 #                              paragraph continuation.
+#     Indented "* item"     -> Markdown bullet list, when every line of the
+#                              indented block is an item
 #
 #     Within a code block the script strips the common leading whitespace so
 #     examples sit flush-left; relative indentation is preserved.
@@ -667,6 +669,15 @@ class Generator
         @out[-1] = @out[-1].rstrip + ' ' + render_inline(cur.strip)
         @i += 1
       end
+      return
+    end
+
+    # Indented "* item" lines are a bullet list, not code.
+    j = @i
+    j += 1 while j < @n && @lines[j].match?(/\A\s{2,}\S/)
+    if @lines[@i...j].all? { |l| l.match?(/\A\s+\* /) }
+      @lines[@i...j].each { |l| push '- ' + render_inline(l.sub(/\A\s+\* /, '')) }
+      @i = j
       return
     end
 
