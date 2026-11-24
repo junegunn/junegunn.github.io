@@ -7,7 +7,7 @@
   var MAX_ELEMENTS = 6;
 
   var popup = document.createElement('div');
-  popup.className = 'link-preview markdown';
+  popup.className = 'link-preview markdown markdown-inner';
   popup.hidden = true;
   document.body.appendChild(popup);
 
